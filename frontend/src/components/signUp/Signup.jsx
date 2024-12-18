@@ -2,17 +2,21 @@ import { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from "../../styles/styles";
 import { RxAvatar } from "react-icons/rx";
-import { Link } from "react-router-dom";
+import { Link, useNavigate  } from "react-router-dom";
 import { useFormik } from "formik"
 import { registerSchema } from "../../yup/validationSchema";
 import { FiLoader } from "react-icons/fi"
 import PriShopLogo from "../../assets/logo/PriShopLogo.png"
+import { toast } from "react-toastify";
+import axios from "axios";
+import { server } from "../../server";
 
 const Signup = () => {
+    const navigate = useNavigate()
     const [visible, setVisible] = useState(false);
     const [avatarPreview, setAvatarPreview] = useState(null);
 
-    const { values, errors, touched, isSubmitting, handleChange, handleBlur, setFieldValue } = useFormik({
+    const { values, errors, touched, isSubmitting, handleChange, handleBlur, setFieldValue, handleSubmit } = useFormik({
         initialValues: {
             fullName: "",
             email: "",
@@ -20,8 +24,46 @@ const Signup = () => {
             avatar: null,
         },
         validationSchema: registerSchema,
-        onSubmit: (values) => {
-            console.log(values);
+        onSubmit: async (values, { setSubmitting, resetForm }) => {
+            try {
+                // Prepare form data for submission
+                const formData = new FormData();
+                formData.append("name", values.fullName);
+                formData.append("email", values.email);
+                formData.append("password", values.password);
+                if (values.avatar) {
+                    formData.append("file", values.avatar);
+                }
+
+                // Send POST request
+                const res = await axios.post(`${server}/user/create-user`, formData, {
+                    headers: { "Content-Type": "multipart/form-data" },
+                });
+
+                if (res.data.success === true) {
+                    toast.success(res.data.message || "User created successfully!");
+                    resetForm();
+                    setAvatarPreview(null);
+
+                    navigate("/login");
+                }
+            }
+            catch (error) {
+               // Handle errors from the backend
+                if (error.response) {
+                    // If the error is due to the user already existing
+                    if (error.response.data.message === "User already exists") {
+                        toast.error("A user with this email already exists!");
+                    } else {
+                        toast.error(error.response?.data?.message || "Something went wrong!");
+                    }
+                } else {
+                    toast.error("Network error or server not reachable.");
+                }
+            } 
+            finally {
+                setSubmitting(false);
+            }
         }
     })
 
@@ -43,7 +85,7 @@ const Signup = () => {
             </div>
             <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-white py-7 px-4 shadow sm:rounded-lg sm:px-10">
-                    <form className="space-y-6" >
+                    <form className="space-y-6" onSubmit={handleSubmit}>
                         <div>
                             <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">Full name</label>
                             <div className="mt-1">
