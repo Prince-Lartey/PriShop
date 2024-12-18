@@ -41,25 +41,15 @@ const Signup = () => {
                 });
 
                 if (res.data.success === true) {
-                    toast.success(res.data.message || "User created successfully!");
+                    toast.success(res.data.message)
                     resetForm();
                     setAvatarPreview(null);
-
-                    navigate("/login");
+                    navigate("/login")
                 }
             }
             catch (error) {
                // Handle errors from the backend
-                if (error.response) {
-                    // If the error is due to the user already existing
-                    if (error.response.data.message === "User already exists") {
-                        toast.error("A user with this email already exists!");
-                    } else {
-                        toast.error(error.response?.data?.message || "Something went wrong!");
-                    }
-                } else {
-                    toast.error("Network error or server not reachable.");
-                }
+                toast.error(error.response.data.message)
             } 
             finally {
                 setSubmitting(false);
