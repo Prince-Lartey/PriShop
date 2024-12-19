@@ -12,7 +12,7 @@ const App = () => {
                 <Route path='/sign-up' element={<SignupPage />}/>
                 <Route path='/activation/:activation_token' element={<ActivationPage />}/>
             </Routes>
-            <ToastContainer position="bottom-right" autoClose={10000} hideProgressBar={false} newestOnTop={false} closeOnClick={false} rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" transition={Slide} />        
+            <ToastContainer position="top-center" autoClose={10000} hideProgressBar={false} newestOnTop={false} closeOnClick={false} rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" transition={Slide} />        
         </BrowserRouter>
     )
 }

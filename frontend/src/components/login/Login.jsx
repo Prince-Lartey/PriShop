@@ -2,20 +2,47 @@ import { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
 import PriShopLogo from "../../assets/logo/PriShopLogo.png"
 import styles from "../../styles/styles"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik"
 import { signInSchema } from "../../yup/validationSchema";
 import { FiLoader } from "react-icons/fi"
+import { toast } from "react-toastify";
+import axios from "axios";
+import { server } from "../../server";
 
 const Login = () => {
+    const navigate = useNavigate()
     const [visible, setVisible] = useState(false);
 
-    const { values, errors, touched, isSubmitting, handleChange, handleBlur } = useFormik({
+    const { values, errors, touched, isSubmitting, handleChange, handleBlur, handleSubmit } = useFormik({
         initialValues: {
             email: "",
             password: "",
         },
         validationSchema: signInSchema,
+        onSubmit: async (values, { setSubmitting }) => {
+            try {
+                const res = await axios.post(
+                    `${server}/user/login-user`,
+                    {
+                        email: values.email,
+                        password: values.password,
+                    },
+                    // { withCredentials: true }
+                );
+                
+                if (res.data.success === true) {
+                    toast.success("Login Successful!");
+                    navigate("/");
+                    window.location.reload(true);
+                }
+                
+            } catch (error) {
+                toast.error(error.response.data.message);
+            } finally {
+                setSubmitting(false);
+            }
+        }
     })
 
     return (
@@ -27,7 +54,7 @@ const Login = () => {
             </div>
             <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-white py-7 px-4 shadow sm:rounded-lg sm:px-10">
-                    <form className="space-y-6">
+                    <form className="space-y-6" onSubmit={handleSubmit}>
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email address</label>
                             <input type="email" name="email" autoComplete="email" placeholder="Enter your email" value={values.email} onChange={handleChange} onBlur={handleBlur} className={errors.email && touched.email ? "appearance-none block w-full px-3 py-2 border border-red-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" : "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"}/>
