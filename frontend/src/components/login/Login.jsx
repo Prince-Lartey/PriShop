@@ -28,7 +28,7 @@ const Login = () => {
                         email: values.email,
                         password: values.password,
                     },
-                    // { withCredentials: true }
+                    { withCredentials: true }
                 );
                 
                 if (res.data.success === true) {

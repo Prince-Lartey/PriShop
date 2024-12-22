@@ -8,6 +8,7 @@ import jwt from "jsonwebtoken"
 import sendMail from "../utils/sendMail.js";
 import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
 import sendToken from "../utils/jwtToken.js";
+import { isAuthenticated } from "../middleware/auth.js"
 
 const router = express.Router()
 
@@ -135,5 +136,24 @@ router.post("/login-user", catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler(error.message, 500));
     }
 }))
+
+// load user
+router.get("/getuser", isAuthenticated, catchAsyncErrors(async (req, res, next) => {
+    try {
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            return next(new ErrorHandler("User doesn't exist", 400));
+        }
+
+        res.status(200).json({
+            success: true,
+            user,
+        });
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+    })
+);
 
 export default router
