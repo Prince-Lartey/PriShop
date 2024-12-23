@@ -13,7 +13,7 @@ export default {
         "800px": "800px",
         "1300px": "1300px",
         "400px": "400px",
-      }
+      },
     },
   },
   plugins: [],
