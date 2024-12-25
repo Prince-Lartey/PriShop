@@ -1,3 +1,8 @@
+import gift from "../assets/category images/gift.jpg"
+import petcare from "../assets/category images/petcare.jpg"
+import shoe from "../assets/category images/shoe.jpg"
+import macbook from "../assets/bestdeal/macbook.jpg"
+
 // navigation Data
 export const navItems = [
     {
@@ -198,14 +203,14 @@ export const categoriesData = [
     },
     {
         id: 2,
-        title: "cosmetics and body care",
+        title: "Cosmetics and Body Care",
         subTitle: "",
         image_Url:
             "https://indian-retailer.s3.ap-south-1.amazonaws.com/s3fs-public/2021-07/kosme1.png",
     },
     {
         id: 3,
-        title: "Accesories",
+        title: "Accessories",
         subTitle: "",
         image_Url:
             "https://img.freepik.com/free-vector/ordering-goods-online-internet-store-online-shopping-niche-e-commerce-website-mother-buying-babies-clothes-footwear-toys-infant-accessories_335657-2345.jpg?w=2000",
@@ -221,21 +226,19 @@ export const categoriesData = [
         id: 5,
         title: "Shoes",
         subTitle: "",
-        image_Url:
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvBQPQMVNRd6TtDkGs2dCri0Y-rxKkFOiEWw&usqp=CAU",
+        image_Url: shoe,
     },
     {
         id: 6,
         title: "Gifts",
         subTitle: "",
-        image_Url:
-            "https://securecdn.pymnts.com/wp-content/uploads/2014/11/Gifts-Photo-700x489.jpg",
+        image_Url: gift,
     },
     {
         id: 7,
         title: "Pet Care",
         subTitle: "",
-        image_Url: "https://cdn.openpr.com/T/c/Tc15444071_g.jpg",
+        image_Url: petcare,
     },
     {
         id: 8,
@@ -271,7 +274,7 @@ export const productData = [
         image_Url: [
             {
             public_id: "test",
-            url: "https://www.istorebangladesh.com/images/thumbs/0000286_macbook-pro-m1_550.png",
+            url: macbook,
             },
             {
             public_id: "test",
@@ -330,7 +333,7 @@ export const productData = [
         image_Url: [
             {
             public_id: "test",
-            url: "https://www.istorebangladesh.com/images/thumbs/0000286_macbook-pro-m1_550.png",
+            url: macbook,
             },
             {
             public_id: "test",
@@ -391,7 +394,7 @@ export const productData = [
         image_Url: [
             {
             public_id: "test",
-            url: "https://mirzacdns3.s3.ap-south-1.amazonaws.com/cache/catalog/RLV0015/2-800x800.jpg",
+            url: shoe,
             },
             {
             public_id: "test",
