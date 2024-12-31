@@ -616,7 +616,7 @@ export const footercompanyLinks = [
         name: "Game & Video",
     },
     {
-        name: "Phone &Tablets",
+        name: "Phone & Tablets",
     },
     {
         name: "Computers & Laptop",
