@@ -16,3 +16,13 @@ body {
     background: #F6F6F5;
     scroll-behavior: smooth;
 }
+
+.greenColor {
+    color: green;
+    font-weight: bold;
+}
+
+.redColor {
+    color: red;
+    font-weight: bold;
+}
