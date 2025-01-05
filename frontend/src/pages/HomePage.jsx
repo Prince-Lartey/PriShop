@@ -5,7 +5,7 @@ import BestDeals from "../components/route/bestDeals/BestDeals"
 import FeaturedProduct from "../components/route/featuredProduct/FeaturedProduct";
 import Events from "../components/events/Events"
 import Sponsored from "../components/route/Sponsored"
-import Footer from "../components/layout/Footer.jsx"
+import Footer from "../components/layout/Footer"
 
 const HomePage = () => {
     return (
