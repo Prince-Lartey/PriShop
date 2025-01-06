@@ -35,7 +35,7 @@ const shopSchema = new mongoose.Schema({
     avatar: {
         public_id: {
             type: String,
-            required: true,
+            required: false,
         },
         url: {
             type: String,
@@ -74,6 +74,6 @@ shopSchema.methods.comparePassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };
 
-const Shop = mongoose.model("Shop", userSchema)
+const Shop = mongoose.model("Shop", shopSchema)
 
 export default Shop

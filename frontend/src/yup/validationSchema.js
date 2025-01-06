@@ -21,3 +21,8 @@ export const registerShopSchema = yup.object({
     address: yup.string().trim().min(10, "Address must be at least 10 characters long").required("Address is required"),
     zipCode: yup.string().trim().matches(/^\d{4,10}$/, "Zip code must be a valid format").required("Zip code is required"),
 })
+
+export const signInShopSchema = yup.object({
+    email: yup.string().trim().email("Email must be a valid email address").required("A valid email is required"),
+    password: yup.string().trim().required("Password is required"),
+})

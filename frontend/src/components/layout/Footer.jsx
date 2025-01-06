@@ -29,7 +29,7 @@ const Footer = () => {
                         <AiOutlineTwitter size={25} style={{ marginLeft: "15px", cursor: "pointer" }} />
                         <AiFillInstagram size={25} style={{ marginLeft: "15px", cursor: "pointer" }} />
                         <AiFillYoutube size={25} style={{ marginLeft: "15px", cursor: "pointer" }}
- />
+/>
                     </div>
                 </ul>
 

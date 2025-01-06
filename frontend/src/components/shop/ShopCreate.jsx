@@ -28,26 +28,37 @@ const ShopCreate = () => {
             phoneNumber: "",
         },
         validationSchema: registerShopSchema,
-        onSubmit: async (values, { setSubmitting }) => {
+        onSubmit: async (values, { setSubmitting, resetForm }) => {
             try {
-                const res = await axios.post(
-                    `${server}/user/login-user`,
-                    {
-                        email: values.email,
-                        password: values.password,
-                    },
-                    { withCredentials: true }
-                );
-                
-                if (res.data.success === true) {
-                    toast.success("Login Successful!");
-                    navigate("/");
-                    window.location.reload(true);
+                // Prepare form data for submission
+                const formData = new FormData();
+                formData.append("name", values.name);
+                formData.append("email", values.email);
+                formData.append("password", values.password);
+                if (values.avatar) {
+                    formData.append("file", values.avatar);
                 }
-                
-            } catch (error) {
-                toast.error(error.response.data.message);
-            } finally {
+                formData.append("zipCode", values.zipCode);
+                formData.append("address", values.address);
+                formData.append("phoneNumber", values.phoneNumber);
+
+                // Send POST request
+                const res = await axios.post(`${server}/shop/create-shop`, formData, {
+                    headers: { "Content-Type": "multipart/form-data" },
+                });
+
+                if (res.data.success === true) {
+                    toast.success(res.data.message)
+                    resetForm();
+                    setAvatarPreview(null);
+                    navigate("/login")
+                }
+            }
+            catch (error) {
+               // Handle errors from the backend
+                toast.error(error.response.data.message)
+            } 
+            finally {
                 setSubmitting(false);
             }
         }
