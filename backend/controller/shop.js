@@ -8,6 +8,7 @@ import jwt from "jsonwebtoken"
 import sendMail from "../utils/sendMail.js";
 import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
 import sendShopToken from "../utils/shopToken.js";
+import { isSeller } from "../middleware/auth.js";
 
 const router = express.Router()
 
@@ -113,13 +114,13 @@ router.post("/login-shop", catchAsyncErrors(async (req, res, next) => {
             return next(new ErrorHandler("Please provide the all fields!", 400));
         }
 
-        const user = await Shop.findOne({ email }).select("+password");
+        const seller = await Shop.findOne({ email }).select("+password");
 
-        if (!user) {
+        if (!seller) {
             return next(new ErrorHandler("Seller not found. Please verify your email and password!!", 400));
         }
 
-        const isPasswordValid = await user.comparePassword(password);
+        const isPasswordValid = await seller.comparePassword(password);
 
         if (!isPasswordValid) {
             return next(
@@ -127,7 +128,25 @@ router.post("/login-shop", catchAsyncErrors(async (req, res, next) => {
             );
         }
 
-        sendShopToken(user, 201, res);
+        sendShopToken(seller, 201, res);
+    } catch (error) {
+    return next(new ErrorHandler(error.message, 500));
+    }
+}));
+
+// load shop
+router.get("/getSeller", isSeller, catchAsyncErrors(async (req, res, next) => {
+    try {
+        const seller = await Shop.findById(req.seller._id);
+
+        if (!seller) {
+            return next(new ErrorHandler("User doesn't exists", 400));
+        }
+
+        res.status(200).json({
+            success: true,
+            seller,
+        });
     } catch (error) {
     return next(new ErrorHandler(error.message, 500));
     }

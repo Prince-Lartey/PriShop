@@ -33,7 +33,6 @@ const ShopLogin = () => {
                 
                 if (res.data.success === true) {
                     toast.success("Login Successful!");
-                    navigate("/");
                     window.location.reload(true);
                 }
                 
