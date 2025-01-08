@@ -35,7 +35,7 @@ const DashboardSideBar = ({ active }) => {
             </div>
 
             <div className="w-full flex items-center p-4">
-                <Link to="/dashboard--create-product" className="w-full flex items-center">
+                <Link to="/dashboard-create-product" className="w-full flex items-center">
                     <AiOutlineFolderAdd size={30} color={`${active === 4 ? "blue" : "#555"}`}/>
                     <h5 className={`hidden 800px:block pl-2 text-[18px] font-[400] ${ active === 4 ? "text-[blue] font-semibold" : "text-[#555]" }`}> Create Product</h5>
                 </Link>

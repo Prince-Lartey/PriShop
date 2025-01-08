@@ -6,6 +6,7 @@ import bodyParser from "body-parser"
 import cors from "cors"
 import user from "./controller/user.js"
 import shop from "./controller/shop.js"
+import product from "./controller/product.js"
 
 const app = express()
 
@@ -25,6 +26,7 @@ if(process.env.NODE_ENV !== "PRODUCTION") {
 // Routes
 app.use("/api/v2/user", user)
 app.use("/api/v2/shop", shop)
+app.use("/api/v2/product", product)
 
 // ErrorHandling
 app.use(errorHandler)

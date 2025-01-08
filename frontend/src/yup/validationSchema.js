@@ -14,7 +14,7 @@ export const signInSchema = yup.object({
 })
 
 export const registerShopSchema = yup.object({
-    name: yup.string().trim().min(4, "FShop name must be at least 4 characters").required("Shop name is required"),
+    name: yup.string().trim().min(4, "Shop name must be at least 4 characters").required("Shop name is required"),
     email: yup.string().trim().email("Email must be a valid email address").required("A valid email is required"),
     password: yup.string().trim().min(8, "Password must not be less than 8 characters").matches(passwordRules, { message: "Provide a stronger password" }).required("Password is required"),
     phoneNumber: yup.string().trim().matches(/^\+?[0-9]{10,15}$/, "Phone number must be valid with 10-15 digits").required("Phone number is required"),

@@ -1,5 +1,5 @@
 
-const DashboardHero = () => {
+const AllProducts = () => {
     return (
         <div>
             
@@ -7,4 +7,4 @@ const DashboardHero = () => {
     )
 }
 
-export default DashboardHero
+export default AllProducts
