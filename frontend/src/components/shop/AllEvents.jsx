@@ -1,24 +1,25 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux"
-import { deleteProduct, getAllProductsShop } from "../../redux/actions/product";
+import { deleteProduct } from "../../redux/actions/product";
 import { Link } from "react-router-dom";
 import { Button } from "@mui/material";
 import { AiOutlineDelete, AiOutlineEye } from "react-icons/ai";
 import Loader from "../layout/Loader";
 import { DataGrid } from "@mui/x-data-grid";
+import { deleteEvent, getAllEventsShop } from "../../redux/actions/event";
 
-const AllProducts = () => {
-    const { products, isLoading } = useSelector((state) => state.products)
+const AllEvents = () => {
+    const { events, isLoading } = useSelector((state) => state.events)
     const { seller } = useSelector((state) => state.seller);
 
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(getAllProductsShop(seller._id));
+        dispatch(getAllEventsShop(seller._id));
     }, [dispatch]);
 
     const handleDelete = (id) => {
-        dispatch(deleteProduct(id));
+        dispatch(deleteEvent(id));
         window.location.reload();
     };
 
@@ -55,7 +56,7 @@ const AllProducts = () => {
             field: "Preview",
             flex: 0.8,
             minWidth: 100,
-            headerName: "",
+            headerName: "Preview",
             type: "number",
             sortable: false,
             renderCell: (params) => {
@@ -76,7 +77,7 @@ const AllProducts = () => {
             field: "Delete",
             flex: 0.8,
             minWidth: 120,
-            headerName: "",
+            headerName: "Delete",
             type: "number",
             sortable: false,
             renderCell: (params) => {
@@ -93,7 +94,7 @@ const AllProducts = () => {
 
     const row = [];
 
-    products && products.forEach((item) => {
+    events && events.forEach((item) => {
         row.push({
             id: item._id,
             name: item.name,
@@ -122,4 +123,4 @@ const AllProducts = () => {
     )
 }
 
-export default AllProducts
+export default AllEvents

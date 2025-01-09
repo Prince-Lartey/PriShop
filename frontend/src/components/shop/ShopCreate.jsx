@@ -51,7 +51,7 @@ const ShopCreate = () => {
                     toast.success(res.data.message)
                     resetForm();
                     setAvatarPreview(null);
-                    navigate("/login")
+                    navigate("/shop-login")
                 }
             }
             catch (error) {

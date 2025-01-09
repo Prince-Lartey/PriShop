@@ -4,44 +4,44 @@ const initialState = {
     isLoading: true,
 };
 
-export const productReducer = createReducer(initialState, (builder) => {
+export const eventReducer = createReducer(initialState, (builder) => {
     builder
-        .addCase("productCreateRequest", (state) => {
+        .addCase("eventCreateRequest", (state) => {
             state.isLoading = true;
         })
-        .addCase("productCreateSuccess", (state, action) => {
+        .addCase("eventCreateSuccess", (state, action) => {
             state.success = true;
             state.isLoading = false;
-            state.product = action.payload;
+            state.event = action.payload;
         })
-        .addCase("productCreateFail", (state, action) => {
+        .addCase("eventCreateFail", (state, action) => {
             state.isLoading = false;
             state.error = action.payload;
             state.success = false;
         })
-
+        
         // get all products of shop
-        .addCase("getAllProductsShopRequest", (state) => {
+        .addCase("getAllEventsShopRequest", (state) => {
             state.isLoading = true;
         })
-        .addCase("getAllProductsShopSuccess", (state, action) => {
+        .addCase("getAllEventsShopSuccess", (state, action) => {
             state.isLoading = false;
-            state.products = action.payload;
+            state.events = action.payload;
         })
-        .addCase("getAllProductsShopFailed", (state, action) => {
+        .addCase("getAllEventsShopFailed", (state, action) => {
             state.isLoading = false;
             state.error = action.payload;
         })
 
         // delete product of a shop
-        .addCase("deleteProductRequest", (state) => {
+        .addCase("deleteEventsRequest", (state) => {
             state.isLoading = true;
         })
-        .addCase("deleteProductSuccess", (state, action) => {
+        .addCase("deleteEventsSuccess", (state, action) => {
             state.isLoading = false;
             state.message = action.payload;
         })
-        .addCase("deleteProductFailed", (state, action) => {
+        .addCase("deleteEventsFailed", (state, action) => {
             state.isLoading = false;
             state.error = action.payload;
         })

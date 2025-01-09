@@ -7,6 +7,7 @@ import cors from "cors"
 import user from "./controller/user.js"
 import shop from "./controller/shop.js"
 import product from "./controller/product.js"
+import event from "./controller/event.js"
 
 const app = express()
 
@@ -27,6 +28,7 @@ if(process.env.NODE_ENV !== "PRODUCTION") {
 app.use("/api/v2/user", user)
 app.use("/api/v2/shop", shop)
 app.use("/api/v2/product", product)
+app.use("/api/v2/event", event)
 
 // ErrorHandling
 app.use(errorHandler)

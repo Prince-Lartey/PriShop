@@ -4,6 +4,7 @@ import upload from "../multer.js";
 import ErrorHandler from "../utils/ErrorHandler.js";
 import Shop from "../model/shop.js";
 import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
+import { isSeller } from "../middleware/auth.js";
 
 const router = express.Router();
 
@@ -40,6 +41,25 @@ router.get("/get-all-products-shop/:id", catchAsyncErrors(async (req, res, next)
         res.status(201).json({
             success: true,
             products,
+        });
+    } catch (error) {
+        return next(new ErrorHandler(error, 400));
+    }
+}));
+
+// delete product of a shop
+router.delete("/delete-shop-product/:id", isSeller, catchAsyncErrors(async (req, res, next) => {
+    try {
+        const productId = req.params.id
+        const product = await Product.findByIdAndDelete(productId);
+
+        if (!product) {
+            return next(new ErrorHandler("Product is not found with this id", 404));
+        }
+
+        res.status(201).json({
+            success: true,
+            message: "Product Deleted successfully!",
         });
     } catch (error) {
         return next(new ErrorHandler(error, 400));
