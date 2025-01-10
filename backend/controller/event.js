@@ -5,6 +5,7 @@ import Shop from "../model/shop.js";
 import ErrorHandler from "../utils/ErrorHandler.js";
 import upload from "../multer.js";
 import { isSeller } from "../middleware/auth.js";
+import fs from "fs"
 
 const router = express.Router()
 
@@ -53,6 +54,20 @@ router.get("/get-all-events/:id", catchAsyncErrors(async (req, res, next) => {
 router.delete("/delete-shop-event/:id", isSeller, catchAsyncErrors(async (req, res, next) => {
     try {
         const eventId = req.params.id
+        const eventData = await Event.findById(eventId);
+
+        eventData.images.forEach((imageUrl) => {
+            const filename = imageUrl
+            const filePath = `uploads/${filename}`
+
+            fs.unlink(filePath, (error) => {
+                if (error) {
+                    console.log(error)
+                    res.status(500).json({ message: "Error deleting file" })
+                }
+            })
+        })
+
         const event = await Event.findByIdAndDelete(eventId);
 
         if (!event) {

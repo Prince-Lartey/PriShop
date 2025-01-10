@@ -55,7 +55,7 @@ const AllProducts = () => {
             field: "Preview",
             flex: 0.8,
             minWidth: 100,
-            headerName: "",
+            headerName: "Preview",
             type: "number",
             sortable: false,
             renderCell: (params) => {
@@ -76,7 +76,7 @@ const AllProducts = () => {
             field: "Delete",
             flex: 0.8,
             minWidth: 120,
-            headerName: "",
+            headerName: "Delete",
             type: "number",
             sortable: false,
             renderCell: (params) => {

@@ -5,6 +5,7 @@ import ErrorHandler from "../utils/ErrorHandler.js";
 import Shop from "../model/shop.js";
 import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
 import { isSeller } from "../middleware/auth.js";
+import fs from "fs"
 
 const router = express.Router();
 
@@ -51,6 +52,20 @@ router.get("/get-all-products-shop/:id", catchAsyncErrors(async (req, res, next)
 router.delete("/delete-shop-product/:id", isSeller, catchAsyncErrors(async (req, res, next) => {
     try {
         const productId = req.params.id
+        const productData = await Product.findById(productId);
+
+        productData.images.forEach((imageUrl) => {
+            const filename = imageUrl
+            const filePath = `uploads/${filename}`
+
+            fs.unlink(filePath, (error) => {
+                if (error) {
+                    console.log(error)
+                    res.status(500).json({ message: "Error deleting file" })
+                }
+            })
+        })
+
         const product = await Product.findByIdAndDelete(productId);
 
         if (!product) {

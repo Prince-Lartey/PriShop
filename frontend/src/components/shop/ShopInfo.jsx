@@ -1,11 +1,16 @@
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { backend_url, server } from "../../server"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import styles from "../../styles/styles"
 import axios from "axios"
+import { useState } from "react"
 
 const ShopInfo = ({ isOwner }) => {
-    const { seller } = useSelector((state) => state.seller)
+    const [data,setData] = useState({});
+    const {products} = useSelector((state) => state.products);
+    const [isLoading,setIsLoading] = useState(false);
+    const {id} = useParams();
+    const dispatch = useDispatch();
 
     const logoutHandler = () => {axios.get(`${server}/shop/logout`, 
         {

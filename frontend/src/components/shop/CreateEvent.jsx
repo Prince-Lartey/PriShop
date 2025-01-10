@@ -106,8 +106,8 @@ const CreateEvent = () => {
                     <label className="pb-2">
                         Category <span className="text-red-500">*</span>
                     </label>
-                    <select className="w-full mt-2 border h-[35px] rounded-[5px]" value={category} onChange={(e) => setCategory(e.target.value)}>
-                        <option value="Choose a category">Choose a category</option>
+                    <select required className="w-full mt-2 border h-[35px] rounded-[5px]" value={category} onChange={(e) => setCategory(e.target.value)}>
+                        <option value="">Choose a category</option>
                         {categoriesData && categoriesData.map((i) => (
                             <option value={i.title} key={i.title}>
                                 {i.title}

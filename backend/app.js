@@ -8,6 +8,7 @@ import user from "./controller/user.js"
 import shop from "./controller/shop.js"
 import product from "./controller/product.js"
 import event from "./controller/event.js"
+import coupon from "./controller/couponCode.js"
 
 const app = express()
 
@@ -29,6 +30,7 @@ app.use("/api/v2/user", user)
 app.use("/api/v2/shop", shop)
 app.use("/api/v2/product", product)
 app.use("/api/v2/event", event)
+app.use("/api/v2/coupon", coupon)
 
 // ErrorHandling
 app.use(errorHandler)
