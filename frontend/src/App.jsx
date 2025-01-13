@@ -10,12 +10,16 @@ import Store from "./redux/store"
 import { loadSeller, loadUser } from "./redux/actions/user";
 import ProtectedRoute from "./Routes/ProtectedRoute.jsx"
 import SellerProtectedRoute from './Routes/SellerProtectedRoute.jsx';
+import { getAllProducts } from './redux/actions/product.js';
+import { getAllEvents } from './redux/actions/event.js';
 
 const App = () => {
 
     useEffect(() => {
         Store.dispatch(loadUser());
         Store.dispatch(loadSeller());
+        Store.dispatch(getAllProducts());
+        Store.dispatch(getAllEvents())
     }, [])
 
     return (

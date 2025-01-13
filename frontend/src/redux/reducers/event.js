@@ -45,6 +45,20 @@ export const eventReducer = createReducer(initialState, (builder) => {
             state.isLoading = false;
             state.error = action.payload;
         })
+
+        // get all events
+        .addCase("getAlleventsRequest", (state) => {
+            state.isLoading = true;
+        })
+        .addCase("getAlleventsSuccess", (state, action) => {
+            state.isLoading = false;
+            state.allEvents = action.payload;
+        })
+        .addCase("getAlleventsFailed", (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload;
+        })
+
         .addCase("clearErrors", (state) => {
             state.error = null;
         })
