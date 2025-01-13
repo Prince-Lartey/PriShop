@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import PriShopLogo from "../../assets/logo/PriShopLogo.png"
 import styles from "../../styles/styles"
 import { useState } from "react";
-import { categoriesData, productData } from "../../static/data.jsx";
+import { categoriesData } from "../../static/data.jsx";
 import { AiOutlineHeart, AiOutlineSearch, AiOutlineShoppingCart } from "react-icons/ai";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io"
 import { BiMenuAltLeft } from "react-icons/bi"
@@ -17,6 +17,7 @@ import { RxCross1 } from "react-icons/rx";
 
 const Header = ({ activeHeading }) => {
     const { isAuthenticated, user } = useSelector((state) => state.user);
+    const { allProducts } = useSelector((state) => state.products);
     const [searchTerm, setSearchTerm] = useState("");
     const [searchData, setSearchData] = useState(null);
     const [active, setActive] = useState(false);
@@ -29,7 +30,7 @@ const Header = ({ activeHeading }) => {
         const term = e.target.value;
         setSearchTerm(term);
     
-        const filteredProducts = productData && productData.filter((product) =>
+        const filteredProducts = allProducts && allProducts.filter((product) =>
             product.name.toLowerCase().includes(term.toLowerCase())
         );
         setSearchData(filteredProducts);
@@ -68,7 +69,7 @@ const Header = ({ activeHeading }) => {
                                     return (
                                         <Link key={index} to={`/product/${Product_name}`}>
                                             <div className="w-full flex items-start py-3">
-                                                <img src={i.image_Url[0].url} alt="" className="w-[40px] h-[40px] mr-[10px]"/>
+                                                <img src={`${backend_url}${i.images[0]}`} alt="" className="w-[40px] h-[40px] mr-[10px]"/>
                                                 <h1>{i.name}</h1>
                                             </div>
                                         </Link>

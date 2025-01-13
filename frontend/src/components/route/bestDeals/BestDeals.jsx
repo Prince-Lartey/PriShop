@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { productData } from "../../../static/data";
 import styles from "../../../styles/styles";
 import ProductCard from "../ProductCard/ProductCard"
 import { useDispatch, useSelector } from "react-redux";
@@ -14,10 +13,10 @@ const BestDeals = () => {
         dispatch(getAllProducts());
     }, [dispatch])
     
-    useEffect(() => { 
-        const firstFive = allProducts.slice(0, 5);
-        setData(firstFive);
-    }, []);
+    // useEffect(() => { 
+    //     const firstFive = allProducts.slice(0, 5);
+    //     setData(firstFive);
+    // }, []);
 
     return (
         <div>

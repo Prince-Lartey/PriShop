@@ -1,5 +1,4 @@
 import styles from '../../../styles/styles'
-import { productData } from '../../../static/data'
 import ProductCard from '../ProductCard/ProductCard'
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';

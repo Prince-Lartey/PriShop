@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import styles from '../../styles/styles';
 import { AiFillHeart, AiOutlineHeart, AiOutlineMessage, AiOutlineShoppingCart } from 'react-icons/ai';
 import { backend_url } from '../../server';
@@ -8,17 +8,17 @@ import { getAllProductsShop } from '../../redux/actions/product';
 
 const ProductDetails = ({data}) => {
     const { user, isAuthenticated } = useSelector((state) => state.user);
-    const { products } = useSelector((state) => state.products);
     const [count, setCount] = useState(1);
     const [click, setClick] = useState(false);
     const [select, setSelect] = useState(0)
     const navigate = useNavigate();
 
+    const { products } = useSelector((state) => state.products);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getAllProductsShop(data && data?.shop._id));
-    }, [data]);
+        dispatch(getAllProductsShop(data && data.shop._id));
+    }, [dispatch, data])
 
     const incrementCount = () => {
         setCount(count + 1)
@@ -41,14 +41,13 @@ const ProductDetails = ({data}) => {
                     <div className="w-full py-5">
                         <div className="block w-full 800px:flex">
                             <div className="w-full 800px:w-[50%]">
-                                <img src={`${data.images[select]}`} alt="" className="w-[80%]"/>
+                                <img src={`${backend_url}${data.images[select]}`} alt="" className="w-[70%]"/>
                                 <div className='w-full flex'>
-                                    <div className={`${select === 0 ? "border" : "null" } cursor-pointer`}>
-                                        <img src={data?.images[0]} alt='' className="h-[200px]" onClick={() => setSelect(0)}/>
-                                    </div>
-                                    <div className={`${select === 1 ? "border" : "null" } cursor-pointer`}>
-                                        <img src={data?.images[1]} alt='' className="h-[200px]" onClick={() => setSelect(1)}/>
-                                    </div>
+                                    {data && data.images.map((i, index) => (
+                                        <div key={index} className={`${select === 0 ? "border" : "null"} cursor-pointer`}>
+                                            <img src={`${backend_url}${i}`} alt="" className="h-[120px] w-[120px] overflow-hidden mr-2 mt-2" onClick={() => setSelect(index)} />
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
 
@@ -102,17 +101,17 @@ const ProductDetails = ({data}) => {
                                 </div>
 
                                 <div className="flex items-center pt-8">
-                                    <Link to={`/shop/preview/`}>
+                                    <Link to={`/shop/preview/${data.shop._id}`}>
                                         <img src={`${backend_url}${data.shop.avatar?.url}`} alt="" className="w-[50px] h-[50px] rounded-full mr-2" />
                                     </Link>
                                     <div className="pr-8">
-                                        <Link to={`/shop/preview/`}>
+                                        <Link to={`/shop/preview/${data.shop._id}`}>
                                             <h3 className={`${styles.shop_name} pb-1 pt-1`}>
                                                 {data.shop.name}
                                             </h3>
                                         </Link>
                                         <h5 className="pb-3 text-[15px]">
-                                            ({data.shop.ratings}) Ratings
+                                            (3/5) Ratings
                                         </h5>
                                     </div>
                                     <div className={`${styles.button} bg-[#6443d1] mt-4 !rounded !h-11`} onClick={handleMessageSubmit}>
@@ -125,7 +124,7 @@ const ProductDetails = ({data}) => {
                         </div>
                     </div>
 
-                    <ProductDetailsInfo data={data}/>
+                    <ProductDetailsInfo data={data} products={products}/>
                     <br />
                     <br />
                 </div>
@@ -185,13 +184,13 @@ const ProductDetailsInfo = ({data, products}) => {
             {active === 3 && (
                 <div className="w-full block 800px:flex p-5">
                     <div className="w-full 800px:w-[50%]">
-                        <Link to={`/shop/preview/`}>
+                        <Link to={`/shop/preview/${data.shop._id}`}>
                             <div className="flex items-center">
-                                <img src={`${data?.shop?.shop_avatar?.url}`} alt="" className="w-[50px] h-[50px] rounded-full" />
+                                <img src={`${backend_url}${data.shop.avatar?.url}`} alt="" className="w-[50px] h-[50px] rounded-full" />
                                 <div className="pl-3">
                                     <h3 className={`${styles.shop_name}`}>{data.shop.name}</h3>
                                     <h5 className="pb-2 text-[15px]">
-                                        ({data.shop.ratings}) Ratings
+                                        (3/5) Ratings
                                     </h5>
                                 </div>
                             </div>
@@ -219,7 +218,7 @@ const ProductDetailsInfo = ({data, products}) => {
                                 Total Reviews:{" "}
                                 <span className="font-[500]">312</span>
                             </h5>
-                            <Link to="/">
+                            <Link to={`/shop/preview/${data.shop._id}`}>
                                 <div className={`${styles.button} !rounded-[4px] !h-[39.5px] mt-3`}>
                                     <h4 className="text-white">Visit Shop</h4>
                                 </div>
