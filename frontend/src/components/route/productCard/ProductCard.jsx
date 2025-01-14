@@ -2,12 +2,15 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "../../../styles/styles.js";
 import { AiFillHeart, AiFillStar, AiOutlineEye, AiOutlineHeart, AiOutlineShoppingCart, AiOutlineStar } from "react-icons/ai";
-import ProductDetailsCard from "../ProductDetailsCard/ProductDetailsCard.jsx"
+import ProductDetailsCard from "../ProductDetailsCard/ProductDetailsCard"
 import { backend_url } from "../../../server.js";
+import { useDispatch, useSelector } from "react-redux";
 
 const ProductCard = ({ data }) => {
+    const { cart } = useSelector((state) => state.cart)
     const [click, setClick] = useState(false);
     const [open, setOpen] = useState(false);
+    const dispatch = useDispatch();
 
     const d = data.name
     const product_name = d.replace(/\s+/g, "-")

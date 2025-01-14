@@ -3,7 +3,6 @@ import styles from "../../styles/styles"
 import CountDown from "./CountDown.jsx"
 
 const EventCard = ({ active, data }) => {
-    console.log(data)
     return (
         <div className={`w-full block bg-white rounded-lg ${active ? "unset" : "mb-12"} lg:flex p-2`}>
             <div className="w-full lg:-w[50%] m-auto">
