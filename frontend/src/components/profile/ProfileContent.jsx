@@ -1,24 +1,38 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { backend_url } from "../../server"
-import { AiOutlineArrowRight, AiOutlineCamera, AiOutlineDelete } from "react-icons/ai";
+import { AiOutlineArrowRight, AiOutlineCamera, AiOutlineDelete, AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from "../../styles/styles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid'
 import { MdOutlineTrackChanges } from "react-icons/md";
+import { updateUserInformation } from "../../redux/actions/user";
+import { toast } from "react-toastify";
 
 const ProfileContent = ({ active }) => {
-    const { user } = useSelector((state) => state.user);
+    const { user, error, successMessage } = useSelector((state) => state.user);
     const [name, setName] = useState(user && user.name);
     const [email, setEmail] = useState(user && user.email);
-    const [phoneNumber, setPhoneNumber] = useState();
-    const [zipCode, setZipCode] = useState("00000");
-    const [address1, setAddress1] = useState("");
-    const [address2, setAddress2] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber);
+    const [password, setPassword] = useState("");
+    const [visible, setVisible] = useState(false);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (error) {
+            toast.error(error);
+            dispatch({ type: "clearErrors" });
+        }
+        if (successMessage) {
+            toast.success(successMessage || "Profile updated successfully!");
+            dispatch({ type: "clearMessages" });
+        }
+    }, [error, successMessage]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        dispatch(updateUserInformation(name, email, phoneNumber, password))
     };
 
     return (
@@ -43,36 +57,27 @@ const ProfileContent = ({ active }) => {
                             <div className="w-full 800px:flex block 800px:pb-5">
                                 <div className=" w-[100%] 800px:w-[50%]">
                                     <label className="block pb-1">Full Name</label>
-                                    <input type="text" className={`${styles.input} !w-[95%] mb-4 800px:mb-0`} required value={name} onChange={(e) => setName(e.target.value)}/>
+                                    <input type="text" className={`${styles.input} !w-[95%] mb-4 800px:mb-0 px-2`} required value={name} onChange={(e) => setName(e.target.value)}/>
                                 </div>
 
                                 <div className=" w-[100%] 800px:w-[50%]">
                                     <label className="block pb-1">Email Address</label>
-                                    <input type="email" className={`${styles.input} !w-[95%] mb-4 800px:mb-0`} required value={email} onChange={(e) => setEmail(e.target.value)}/>
+                                    <input type="email" className={`${styles.input} !w-[95%] mb-4 800px:mb-0 px-2`} required value={email} onChange={(e) => setEmail(e.target.value)}/>
                                 </div>
                             </div>
 
                             <div className="w-full 800px:flex block 800px:pb-5">
                                 <div className=" w-[100%] 800px:w-[50%]">
                                     <label className="block pb-1">Phone Number</label>
-                                    <input type="number" className={`${styles.input} !w-[95%] mb-4 800px:mb-0`} required value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)}/>
+                                    <input type="number" className={`${styles.input} !w-[95%] mb-4 800px:mb-0 px-2`} required value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)}/>
                                 </div>
 
                                 <div className=" w-[100%] 800px:w-[50%]">
-                                    <label className="block pb-1">Zip Code</label>
-                                    <input type="number" className={`${styles.input} !w-[95%] mb-4 800px:mb-0`} required value={zipCode} onChange={(e) => setZipCode(e.target.value)}/>
-                                </div>
-                            </div>
-
-                            <div className="w-full 800px:flex block">
-                                <div className=" w-[100%] 800px:w-[50%]">
-                                    <label className="block pb-1">Address 1</label>
-                                    <input type="address" className={`${styles.input} !w-[95%] mb-4 800px:mb-0`} required value={address1} onChange={(e) => setAddress1(e.target.value)}/>
-                                </div>
-
-                                <div className=" w-[100%] 800px:w-[50%]">
-                                    <label className="block pb-1">Address 2</label>
-                                    <input type="address" className={`${styles.input} !w-[95%] mb-4 800px:mb-0`} required value={address2} onChange={(e) => setAddress2(e.target.value)}/>
+                                    <label className="block pb-1">Enter your password</label>
+                                    <div className="relative">
+                                        <input type={visible ? "text" : "password"} className={`${styles.input} !w-[95%] mb-4 800px:mb-0 px-2`} required value={password} onChange={(e) => setPassword(e.target.value)}/>
+                                        {visible ? (<AiOutlineEye className="absolute right-8 top-1 cursor-pointer" size={25} onClick={() => setVisible(false)} />) : (<AiOutlineEyeInvisible className="absolute right-8 top-1 cursor-pointer" size={25} onClick={() => setVisible(true)}/>)}
+                                    </div>
                                 </div>
                             </div>
 

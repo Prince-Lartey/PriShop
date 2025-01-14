@@ -64,12 +64,9 @@ const Header = ({ activeHeading }) => {
                         {searchData && searchData.length !== 0 ? (
                             <div className="absolute min-h-[30vh] bg-slate-50 shadow-sm-2 z-[9] p-4">
                                 {searchData?.map((i, index) => {
-                                    const d = i.name
-
-                                    const Product_name = d.replace(/\s+/g, "-")
 
                                     return (
-                                        <Link key={index} to={`/product/${Product_name}`}>
+                                        <Link key={index} to={`/product/${i._id}`}>
                                             <div className="w-full flex items-start py-3">
                                                 <img src={`${backend_url}${i.images[0]}`} alt="" className="w-[40px] h-[40px] mr-[10px]"/>
                                                 <h1>{i.name}</h1>
@@ -81,7 +78,7 @@ const Header = ({ activeHeading }) => {
                         ) : null}
                     </div>
 
-                    <div className={`${styles.button}`}>
+                    <div className={`${styles.button} !rounded-[4px]`}>
                         <Link to="/shop-create">
                             <h1 className="text-[#fff] flex items-center">
                                 Become a Seller
@@ -130,7 +127,7 @@ const Header = ({ activeHeading }) => {
                             <div className="relative cursor-pointer mr-[15px]">
                                 {isAuthenticated ? (
                                     <Link to="/profile">
-                                        <img src={`${backend_url}${user.avatar.url}`} alt="" className="w-[35px] h-[35px] rounded-full"/>
+                                        <img src={`${backend_url}${user.avatar.url}`} alt="" className="w-[35px] h-[35px] rounded-full border-[3px] border-[#3ad132]"/>
                                     </Link>
                                 ) : (
                                     <Link to="/login">

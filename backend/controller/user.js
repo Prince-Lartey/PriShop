@@ -112,10 +112,6 @@ router.post("/login-user", catchAsyncErrors(async (req, res, next) => {
     try {
         const { email, password } = req.body;
 
-        // if (!email || !password) {
-        //     return next(new ErrorHandler("Please provide the all fields!", 400));
-        // }
-
         const user = await User.findOne({ email }).select("+password");
 
         if (!user) {
@@ -174,5 +170,40 @@ router.get( "/logout", catchAsyncErrors(async (req, res, next) => {
         }
     })
 );
+
+// update user info
+router.put("/update-user-info", isAuthenticated, catchAsyncErrors(async (req, res, next) => {
+    try {
+        const { email, password, phoneNumber, name } = req.body;
+
+        const user = await User.findOne({ email }).select("+password");
+
+        if (!user) {
+            return next(new ErrorHandler("User not found", 400));
+        }
+
+        const isPasswordValid = await user.comparePassword(password);
+
+        if (!isPasswordValid) {
+            return next(
+                new ErrorHandler("Enter correct password to update profile", 400)
+            );
+        }
+
+        user.name = name;
+        user.email = email;
+        user.phoneNumber = phoneNumber;
+
+        await user.save();
+
+        res.status(201).json({
+            success: true,
+            message: "Profile updated successfully!",
+            user,
+        });
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+}));
 
 export default router

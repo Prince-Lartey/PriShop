@@ -5,9 +5,14 @@ import { AiFillHeart, AiOutlineHeart, AiOutlineMessage, AiOutlineShoppingCart } 
 import { backend_url } from '../../server';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllProductsShop } from '../../redux/actions/product';
+import { addToWishlist, removeFromWishlist } from '../../redux/actions/wishlist';
+import { toast } from 'react-toastify';
+import { addTocart } from '../../redux/actions/cart';
 
 const ProductDetails = ({data}) => {
     const { user, isAuthenticated } = useSelector((state) => state.user);
+    const { wishlist } = useSelector((state) => state.wishlist);
+    const { cart } = useSelector((state) => state.cart);
     const [count, setCount] = useState(1);
     const [click, setClick] = useState(false);
     const [select, setSelect] = useState(0)
@@ -18,7 +23,12 @@ const ProductDetails = ({data}) => {
 
     useEffect(() => {
         dispatch(getAllProductsShop(data && data.shop._id));
-    }, [dispatch, data])
+        if (wishlist && wishlist.find((i) => i._id === data?._id)) {
+            setClick(true);
+        } else {
+        setClick(false);
+        }
+    }, [dispatch, data, wishlist])
 
     const incrementCount = () => {
         setCount(count + 1)
@@ -29,6 +39,33 @@ const ProductDetails = ({data}) => {
             setCount(count - 1)
         }
     }
+
+    const removeFromWishlistHandler = (data) => {
+        setClick(!click);
+        dispatch(removeFromWishlist(data));
+    };
+
+    const addToWishlistHandler = (data) => {
+        setClick(!click);
+        dispatch(addToWishlist(data));
+    };
+
+    const addToCartHandler = (id) => {
+        const isItemExists = cart?.find((item) => item._id === id);
+        if (isItemExists) {
+            toast.error("Item already in cart!");
+            return
+        }
+
+        if (data.stock < count) {
+            toast.error("Product stock limited!");
+            return
+        } 
+
+        const cartData = { ...data, qty: count };
+        dispatch(addTocart(cartData));
+        toast.success("Item added to cart successfully!");
+    };
 
     const handleMessageSubmit = async () => {
 
@@ -80,21 +117,21 @@ const ProductDetails = ({data}) => {
                                         { click ? ( <AiFillHeart
                                             size={30}
                                             className="cursor-pointer"
-                                            onClick={() => setClick(!click)}
+                                            onClick={() => removeFromWishlistHandler(data)}
                                             color={click ? "red" : "#333"}
                                             title="Remove from wishlist"/>
                                         ) : (
                                         <AiOutlineHeart
                                             size={30}
                                             className="cursor-pointer"
-                                            onClick={() => setClick(!click)}
+                                            onClick={() => addToWishlistHandler(data)}
                                             title="Add to wishlist"
                                         />
                                         )}
                                     </div>
                                 </div>
 
-                                <div className={`${styles.button} mt-6 rounded-[4px] h-11 flex items-center`}>
+                                <div className={`${styles.button} !mt-6 !rounded-[4px] !h-11 flex items-center`} onClick={() => addToCartHandler(data._id)}>
                                     <span className="text-[#fff] flex items-center">
                                         Add to Cart <AiOutlineShoppingCart className="ml-1" />
                                     </span>
@@ -166,11 +203,9 @@ const ProductDetailsInfo = ({data, products}) => {
             </div>
 
             {active === 1 ? (
-                <>
-                    <p className="py-2 text-[18px] leading-8 pb-10 whitespace-pre-line min-h-[40vh]">
-                        {data.description}
-                    </p>
-                </>
+                <p className="py-2 text-[18px] leading-8 pb-10 whitespace-pre-line min-h-[40vh]">
+                    {data.description}
+                </p>
             ) : null}
 
             {active === 2 ? (
@@ -211,7 +246,7 @@ const ProductDetailsInfo = ({data, products}) => {
                             <h5 className="font-[600] pt-3">
                                 Total Products:{" "}
                                 <span className="font-[500]">
-                                    {products && products.length}
+                                    {products?.length}
                                 </span>
                             </h5>
                             <h5 className="font-[600] pt-3">
