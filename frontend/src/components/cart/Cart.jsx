@@ -3,7 +3,6 @@ import styles from "../../styles/styles"
 import { IoBagHandleOutline } from "react-icons/io5";
 import { useState } from "react";
 import { HiOutlineMinus, HiPlus } from "react-icons/hi"
-import shoe from "../../assets/bestdeal/shoe.jpg"
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
