@@ -52,8 +52,8 @@ const ProfileSidebar = ({ setActive, active }) => {
             </div>
 
             <div className="flex items-center cursor-pointer w-full mb-8" onClick={() => setActive(6)}>
-                <MdOutlinePayments size={20} color={active === 6 ? "blue" : ""} />
-                <span className={`pl-3 ${ active === 6 ? "text-[blue] font-semibold" : "" } 800px:block hidden`}> Update Password</span>
+                <RiLockPasswordLine size={20} color={active === 6 ? "blue" : ""} />
+                <span className={`pl-3 ${ active === 6 ? "text-[blue] font-semibold" : "" } 800px:block hidden`}> Change Password</span>
             </div>
 
             <div className="flex items-center cursor-pointer w-full mb-8" onClick={() => setActive(7)}>

@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { RxCross1 } from "react-icons/rx";
 import { Country, State } from "country-state-city"
+import { FiLoader } from "react-icons/fi";
 
 const ProfileContent = ({ active }) => {
     const { user, error, successMessage } = useSelector((state) => state.user);
@@ -21,6 +22,7 @@ const ProfileContent = ({ active }) => {
     const [password, setPassword] = useState("");
     const [visible, setVisible] = useState(false);
     const [avatar, setAvatar] = useState(null)
+    const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -80,27 +82,27 @@ const ProfileContent = ({ active }) => {
                     <br />
                     <br />
                     <div className="w-full px-5">
-                        <form onSubmit={handleSubmit} aria-required={true}>
+                        <form onSubmit={handleSubmit}>
                             <div className="w-full 800px:flex block 800px:pb-5">
                                 <div className=" w-[100%] 800px:w-[50%]">
-                                    <label className="block pb-1">Full Name</label>
+                                    <label htmlFor="name" className="block pb-1">Full Name</label>
                                     <input type="text" className={`${styles.input} !w-[95%] mb-4 800px:mb-0 px-2`} required value={name} onChange={(e) => setName(e.target.value)}/>
                                 </div>
 
                                 <div className=" w-[100%] 800px:w-[50%]">
-                                    <label className="block pb-1">Email Address</label>
+                                    <label htmlFor="email" className="block pb-1">Email Address</label>
                                     <input type="email" className={`${styles.input} !w-[95%] mb-4 800px:mb-0 px-2`} required value={email} onChange={(e) => setEmail(e.target.value)}/>
                                 </div>
                             </div>
 
                             <div className="w-full 800px:flex block 800px:pb-5">
                                 <div className=" w-[100%] 800px:w-[50%]">
-                                    <label className="block pb-1">Phone Number</label>
+                                    <label htmlFor="phoneNumber" className="block pb-1">Phone Number</label>
                                     <input type="number" className={`${styles.input} !w-[95%] mb-4 800px:mb-0 px-2`} required value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)}/>
                                 </div>
 
                                 <div className=" w-[100%] 800px:w-[50%]">
-                                    <label className="block pb-1">Enter your password</label>
+                                    <label htmlFor="password" className="block pb-1">Enter your password</label>
                                     <div className="relative">
                                         <input type={visible ? "text" : "password"} className={`${styles.input} !w-[95%] mb-4 800px:mb-0 px-2`} required value={password} onChange={(e) => setPassword(e.target.value)}/>
                                         {visible ? (<AiOutlineEye className="absolute right-8 top-1 cursor-pointer" size={25} onClick={() => setVisible(false)} />) : (<AiOutlineEyeInvisible className="absolute right-8 top-1 cursor-pointer" size={25} onClick={() => setVisible(true)}/>)}
@@ -135,10 +137,10 @@ const ProfileContent = ({ active }) => {
                 </div>
             )}
 
-            {/* Payment Method */}
+            {/* Change Password */}
             {active === 6 && (
                 <div>
-                    <PaymentMethod />
+                    <ChangePassword />
                 </div>
             )}
 
@@ -409,28 +411,72 @@ const  TrackOrder = () => {
 
 }
 
-const PaymentMethod = () => {
+const ChangePassword = () => {
+    const [oldPassword, setOldPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [visible, setVisible] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
+
+    const passwordChangeHandler = async (e) => {
+        e.preventDefault();
+        setIsLoading(true)
+    
+        await axios.put(`${server}/user/update-user-password`,
+            { oldPassword, newPassword, confirmPassword },
+            { withCredentials: true })
+            .then((res) => {
+                toast.success(res.data.message);
+                setOldPassword("");
+                setNewPassword("");
+                setConfirmPassword("");
+                setIsLoading(false);
+            })
+            .catch((error) => {
+                toast.error(error.response.data.message);
+                setIsLoading(false);
+            }
+        );
+    };
+
     return (
         <div className="w-full px-5">
-            <div className="flex w-full items-center justify-between">
-                <h1 className="block text-[25px] text-center font-[600] text-[#000000ba] pb-2">Payment Methods</h1>
-                <div className={`${styles.button} !rounded-md`}>
-                    <span className="text-[#fff]">Add New</span>
-                </div>
-            </div>
-            <br />
-            <div className="w-full bg-white h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-10 ">
-                <div className="flex items-center">
-                    <img src="https://bonik-react.vercel.app/assets/images/payment-methods/Visa.svg" alt="" />
-                    <h5 className="pl-5 font-[600] ">Prince Lartey</h5>
-                </div>
-                <div className="flex pl-8 items-center">
-                    <h6>1234 **** **** ****</h6>
-                    <h5 className="pl-6">09/2030</h5>
-                </div>
-                <div className="min-w-[10%] flex items-center justify-between pl-8 ">
-                    <AiOutlineDelete size={25} className="cursor-pointer"/>
-                </div>
+            <h1 className="block text-[25px] text-center font-[600] text-[#000000ba] pb-2">Change Password</h1>
+            
+            <div className="w-full">
+                <form onSubmit={passwordChangeHandler} className="flex flex-col items-center">
+                    <div className=" w-[100%] 800px:w-[50%] mt-5">
+                        <label htmlFor="oldPassword" className="block pb-2">Enter your old password</label>
+                        <div className="relative">
+                            <input type={visible ? "text" : "password"} className={`${styles.input} !w-[95%] mb-4 800px:mb-0 px-2`} required value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} />
+                            {visible ? (<AiOutlineEye className="absolute right-8 top-1 cursor-pointer" size={25} onClick={() => setVisible(false)} />) : (<AiOutlineEyeInvisible className="absolute right-8 top-1 cursor-pointer" size={25} onClick={() => setVisible(true)}/>)}
+                        </div>
+                    </div>
+
+                    <div className=" w-[100%] 800px:w-[50%] mt-2">
+                        <label htmlFor="newPassword" className="block pb-2">Enter your new password</label>
+                        <div className="relative">
+                            <input type={visible ? "text" : "password"} className={`${styles.input} !w-[95%] mb-4 800px:mb-0 px-2`} required value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+                            {visible ? (<AiOutlineEye className="absolute right-8 top-1 cursor-pointer" size={25} onClick={() => setVisible(false)} />) : (<AiOutlineEyeInvisible className="absolute right-8 top-1 cursor-pointer" size={25} onClick={() => setVisible(true)}/>)}
+                        </div>                    
+                    </div>
+
+                    <div className=" w-[100%] 800px:w-[50%] mt-2">
+                        <label htmlFor="confirmPassword" className="block pb-2">Confirm your new password</label>
+                        <div className="relative">
+                            <input type={visible ? "text" : "password"} className={`${styles.input} !w-[95%] mb-4 800px:mb-0 px-2`} required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                            {visible ? (<AiOutlineEye className="absolute right-8 top-1 cursor-pointer" size={25} onClick={() => setVisible(false)} />) : (<AiOutlineEyeInvisible className="absolute right-8 top-1 cursor-pointer" size={25} onClick={() => setVisible(true)}/>)}
+                        </div>                        
+                        
+                        <button className={`w-[95%] h-[40px] border border-[#3a24db] bg-[#3a24db] text-center text-white rounded-[3px] mt-8 cursor-pointer flex items-center justify-center`} type="submit" disabled={isLoading}>
+                            {isLoading ? (
+                                <FiLoader  className="animate-spin" size={20}/>
+                            ) : (
+                                "Update"
+                            )}
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     )
