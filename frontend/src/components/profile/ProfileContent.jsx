@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid'
 import { MdOutlineTrackChanges } from "react-icons/md";
-import { updateUserInformation } from "../../redux/actions/user";
+import { deleteUserAddress, updateUserAddress, updateUserInformation } from "../../redux/actions/user";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { RxCross1 } from "react-icons/rx";
@@ -29,7 +29,7 @@ const ProfileContent = ({ active }) => {
             dispatch({ type: "clearErrors" });
         }
         if (successMessage) {
-            toast.success(successMessage || "Profile updated successfully!");
+            toast.success(successMessage);
             dispatch({ type: "clearMessages" });
         }
     }, [error, successMessage]);
@@ -465,9 +465,23 @@ const Address = () => {
         if (addressType === "" || country === "" || city === "") {
             toast.error("Please fill all the fields!");
         } else {
-            ""
+            dispatch(
+                updateUserAddress( country, city, address1, address2, zipCode, addressType )
+            );
+            setOpen(false);
+            setCountry("");
+            setCity("");
+            setAddress1("");
+            setAddress2("");
+            setZipCode(null);
+            setAddressType("");
         }
     }
+
+    const handleDelete = (item) => {
+        const id = item._id;
+        dispatch(deleteUserAddress(id));
+    };
 
     return (
         <div className="w-full px-5">
@@ -488,7 +502,7 @@ const Address = () => {
                                         <label htmlFor="country" className="block pb-2">Country</label>
                                         <select required name="" id="" value={country} onChange={(e) => setCountry(e.target.value)} className="w-[95%] border h-[40px] rounded-[5px] px-2" >
                                             <option value="" className="block border pb-2 text-gray-500">
-                                                choose your country
+                                                Choose your Country
                                             </option>
                                             {Country && Country.getAllCountries().map((item) => (
                                                 <option className="block pb-2" key={item.isoCode} value={item.isoCode}>
@@ -502,7 +516,7 @@ const Address = () => {
                                         <label htmlFor="city" className="block pb-2">City</label>
                                         <select required name="" id="" value={city} onChange={(e) => setCity(e.target.value)} className="w-[95%] border h-[40px] rounded-[5px] px-2" >
                                             <option value="" className="block border pb-2 text-gray-500">
-                                                choose your city
+                                                Choose your City
                                             </option>
                                             {State && State.getStatesOfCountry(country).map((item) => (
                                                 <option className="block pb-2" key={item.isoCode} value={item.isoCode}>
@@ -551,26 +565,38 @@ const Address = () => {
                 </div>
             )}
             <div className="flex w-full items-center justify-between">
-                <h1 className="block text-[25px] text-center font-[600] text-[#000000ba] pb-2">Addresses</h1>
+                <h1 className="block text-[25px] text-center font-[600] text-[#000000ba] pb-2">My Addresses</h1>
                 <div className={`${styles.button} !rounded-md`} onClick={() => setOpen(true)}>
                     <span className="text-[#fff]">Add New</span>
                 </div>
             </div>
             <br />
-            <div className="w-full bg-white h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-10 ">
-                <div className="flex items-center">
-                    <h5 className="pl-5 font-[600] ">Default</h5>
+            {user?.addresses.map((item, index) => (
+                <div className="w-full bg-white h-min 800px:h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-10 mb-5" key={index}>
+                    <div className="flex items-center">
+                        <h5 className="pl-5 font-[600]">{item.addressType}</h5>
+                    </div>
+                    <div className="pl-8 flex items-center">
+                        <h6 className="text-[12px] 800px:text-[unset]">
+                            {item.address1}, {item.address2}
+                        </h6>
+                    </div>
+                    <div className="pl-8 flex items-center">
+                        <h6 className="text-[12px] 800px:text-[unset]">
+                            {user && user.phoneNumber}
+                        </h6>
+                    </div>
+                    <div className="min-w-[10%] flex items-center justify-between pl-8">
+                        <AiOutlineDelete size={25} className="cursor-pointer hover:text-red-600" onClick={() => handleDelete(item)}/>
+                    </div>
                 </div>
-                <div className="flex pl-8 items-center">
-                    <h6>GA-310-8822, Odonti street, Accra, Ghana</h6>
-                </div>
-                <div className="flex pl-8 items-center">
-                    <h6>(233) 5457 43115</h6>
-                </div>
-                <div className="min-w-[10%] flex items-center justify-between pl-8 ">
-                    <AiOutlineDelete size={25} className="cursor-pointer"/>
-                </div>
-            </div>
+            ))}
+
+            {user?.addresses.length === 0 && (
+                <h5 className="text-center pt-8 text-[18px]">
+                    You don&apos;t have any saved address!
+                </h5>
+            )}
         </div>
     )
 }

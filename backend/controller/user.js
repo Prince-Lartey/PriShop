@@ -269,4 +269,23 @@ router.put("/update-user-addresses", isAuthenticated, catchAsyncErrors(async (re
     }
 }));
 
+// delete user address
+router.delete("/delete-user-address/:id", isAuthenticated, catchAsyncErrors(async (req, res, next) => {
+    try {
+        const userId = req.user._id;
+        const addressId = req.params.id;
+
+        await User.updateOne(
+            { _id: userId, },
+            { $pull: { addresses: { _id: addressId } } }
+        );
+
+        const user = await User.findById(userId);
+
+        res.status(200).json({ success: true, user });
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+}))
+
 export default router
