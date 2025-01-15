@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { backend_url } from "../../server"
+import { backend_url, server } from "../../server"
 import { AiOutlineArrowRight, AiOutlineCamera, AiOutlineDelete, AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from "../../styles/styles";
 import { useEffect, useState } from "react";
@@ -9,6 +9,7 @@ import { DataGrid } from '@mui/x-data-grid'
 import { MdOutlineTrackChanges } from "react-icons/md";
 import { updateUserInformation } from "../../redux/actions/user";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 const ProfileContent = ({ active }) => {
     const { user, error, successMessage } = useSelector((state) => state.user);
@@ -17,6 +18,7 @@ const ProfileContent = ({ active }) => {
     const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber);
     const [password, setPassword] = useState("");
     const [visible, setVisible] = useState(false);
+    const [avatar, setAvatar] = useState(null)
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -35,6 +37,29 @@ const ProfileContent = ({ active }) => {
         dispatch(updateUserInformation(name, email, phoneNumber, password))
     };
 
+    const handleImage = async (e) => {
+        try {
+            const file = e.target.files[0];
+            if (!file) return;
+    
+            setAvatar(file);
+    
+            const formData = new FormData();
+            formData.append("image", file);
+    
+            await axios.put(`${server}/user/update-avatar`, formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+                withCredentials: true,
+            });
+    
+            window.location.reload();
+            toast.success("Avatar updated successfully!");
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Failed to update avatar");
+            console.error(error);
+        }
+    }
+
     return (
         <div className="w-full">
 
@@ -45,7 +70,7 @@ const ProfileContent = ({ active }) => {
                         <div className="relative">
                             <img src={`${backend_url}${user?.avatar.url}`} alt="" className="w-[150px] h-[150px] rounded-full object-cover border-[3px] border-[#3ad132]"/>
                             <div className="w-[30px] h-[30px] bg-[#E3E9EE] rounded-full flex items-center justify-center cursor-pointer absolute bottom-[5px] right-[5px]">
-                                <input type="file" id="image" className="hidden" onChange={""}/>
+                                <input type="file" id="image" className="hidden" onChange={handleImage}/>
                                 <label htmlFor="image"><AiOutlineCamera /></label>
                             </div>
                         </div>
@@ -410,6 +435,16 @@ const PaymentMethod = () => {
 }
 
 const Address = () => {
+    const [open, setOpen] = useState(false);
+    const [country, setCountry] = useState("");
+    const [city, setCity] = useState("");
+    const [zipCode, setZipCode] = useState();
+    const [address1, setAddress1] = useState("");
+    const [address2, setAddress2] = useState("");
+    const [addressType, setAddressType] = useState("");
+    const { user } = useSelector((state) => state.user);
+    const dispatch = useDispatch();
+    
     return (
         <div className="w-full px-5">
             <div className="flex w-full items-center justify-between">
