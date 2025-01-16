@@ -501,7 +501,7 @@ const Address = () => {
             name: "Home",
         },
         {
-            name: "Office",
+            name: "Work",
         },
     ];
 
