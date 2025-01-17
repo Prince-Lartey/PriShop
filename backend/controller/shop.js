@@ -15,14 +15,14 @@ const router = express.Router()
 // create shop
 router.post("/create-shop", upload.single("file"), async (req, res, next) => {
     try {
-        const { email } = req.body;
+        const { name, email, phoneNumber } = req.body;
+
         const sellerEmail = await Shop.findOne({ email });
         if (sellerEmail) {
             const filename = req.file.filename
             const filePath = `uploads/${filename}`
             fs.unlink(filePath, (error) => {
                 if (error) {
-                    console.log(error)
                     res.status(500).json({ message: "Error deleting file" })
                 }
             })
@@ -33,8 +33,21 @@ router.post("/create-shop", upload.single("file"), async (req, res, next) => {
         const filename = req.file.filename
         const fileUrl = path.join(filename)
 
+        // Create subaccount on Paystack
+        // let subaccountCode;
+        // try {
+        //     const subaccountResponse = await createSubaccount({
+        //         name,
+        //         email,
+        //         phoneNumber,
+        //     });
+        //     subaccountCode = subaccountResponse.subaccount_code; // Extract subaccount code from Paystack response
+        // } catch (error) {
+        //     return next(new ErrorHandler("Error creating subaccount: " + error.message, 500));
+        // }
+
         const seller = {
-            name: req.body.name,
+            name: name,
             email: email,
             password: req.body.password,
             avatar: {
@@ -42,8 +55,9 @@ router.post("/create-shop", upload.single("file"), async (req, res, next) => {
                 public_id: null
             },
             address: req.body.address,
-            phoneNumber: req.body.phoneNumber,
+            phoneNumber: phoneNumber,
             zipCode: req.body.zipCode,
+            // subaccountCode,
         };
 
         const activationToken = createActivationToken(seller);

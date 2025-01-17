@@ -1,6 +1,6 @@
 import { Slide, ToastContainer } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css"; 
-import { LoginPage, SignupPage, ActivationPage, HomePage, ProductsPage, BestSellingPage, EventsPage, FAQPage, ProductDetailsPage, ProfilePage, CheckoutPage, ShopCreatePage, SellerActivationPage, ShopLoginPage } from './Routes/Routes.js'
+import { LoginPage, SignupPage, ActivationPage, HomePage, ProductsPage, BestSellingPage, EventsPage, FAQPage, ProductDetailsPage, ProfilePage, CheckoutPage, ShopCreatePage, SellerActivationPage, ShopLoginPage, PaymentPage } from './Routes/Routes.js'
 import { ShopDashboardPage, ShopCreateProduct, ShopAllProducts, ShopCreateEvents, ShopAllEvents, ShopAllCoupons, ShopPreviewPage } from './Routes/ShopRoutes.js';
 import { ShopHomePage } from "./ShopRoutes.js";
 import './App.css'
@@ -38,6 +38,11 @@ const App = () => {
                 <Route path="/checkout" element={
                     <ProtectedRoute>
                         <CheckoutPage />
+                    </ProtectedRoute>
+                }/>
+                <Route path="/payment" element={
+                    <ProtectedRoute>
+                        <PaymentPage />
                     </ProtectedRoute>
                 }/>
                 <Route path="/profile" element={

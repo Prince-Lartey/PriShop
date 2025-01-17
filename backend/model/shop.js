@@ -14,7 +14,7 @@ const shopSchema = new mongoose.Schema({
     password: {
         type: String,
         required: [true, "Please enter your password"],
-        minLength: [6, "Password should be greater than 6 characters"],
+        minLength: [8, "Password should be greater than 8 characters"],
         select: false,
     },
     description: {
@@ -25,7 +25,7 @@ const shopSchema = new mongoose.Schema({
         required: true,
     },
     phoneNumber: {
-        type: Number,
+        type: String, // Mobile money number (e.g., +233501234567)
         required: true,
     },
     role: {
@@ -45,6 +45,18 @@ const shopSchema = new mongoose.Schema({
     zipCode: {
         type: Number,
         required: true,
+    },
+    subaccountCode: {
+        type: String,
+        required: false, // Generated after successful Paystack integration
+    },
+    commissionPercentage: {
+        type: Number,
+        default: 2.5, // Default commission percentage
+    },
+    isVerified: {
+        type: Boolean,
+        default: false, // Updated to true after successful verification
     },
     createdAt: {
         type: Date,
