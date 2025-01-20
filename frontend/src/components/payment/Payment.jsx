@@ -50,13 +50,11 @@ const PaymentInfo = ({ user, paymentHandler, }) => {
                     </h4>      
                 </div>
 
-                {/* pay with card */}
+                {/* pay with card or momo */}
                 {select === 1 ? (
                     <div className="w-full flex border-b">
                         <form className="w-full" onSubmit={paymentHandler}>
-                            
-
-                            <input type="submit" value="Submit" className={`${styles.button} !bg-[#f63b60] text-[#fff] h-[45px] rounded-[5px] cursor-pointer text-[18px] font-[600]`}/>
+                            <input type="submit" value="Pay Now" className={`${styles.button} !bg-[#f63b60] text-[#fff] h-[45px] rounded-[5px] cursor-pointer text-[18px] font-[600]`}/>
                         </form>
                     </div>
                 ) : null}
@@ -88,12 +86,12 @@ const CartData = ({ orderData }) => {
     return (
         <div className="w-full bg-[#fff] rounded-md p-5 pb-8">
             <div className="flex justify-between">
-                <h3 className="text-[16px] font-[400] text-[#000000a4]">subtotal:</h3>
+                <h3 className="text-[16px] font-[400] text-[#000000a4]">Subtotal:</h3>
                 <h5 className="text-[18px] font-[600]">GH₵ {orderData?.subTotalPrice}</h5>
             </div>
             <br />
             <div className="flex justify-between">
-                <h3 className="text-[16px] font-[400] text-[#000000a4]">shipping:</h3>
+                <h3 className="text-[16px] font-[400] text-[#000000a4]">Shipping:</h3>
                 <h5 className="text-[18px] font-[600]">GH₵ {shipping}</h5>
             </div>
             <br />
