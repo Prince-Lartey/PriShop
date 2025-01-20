@@ -10,6 +10,7 @@ import product from "./controller/product.js"
 import event from "./controller/event.js"
 import coupon from "./controller/couponCode.js"
 import payment from "./controller/payment.js"
+import order from "./controller/order.js"
 
 const app = express()
 
@@ -33,6 +34,7 @@ app.use("/api/v2/product", product)
 app.use("/api/v2/event", event)
 app.use("/api/v2/coupon", coupon)
 app.use("/api/v2/payment", payment)
+app.use("/api/v2/order", order)
 
 // ErrorHandling
 app.use(errorHandler)
