@@ -53,36 +53,8 @@ const Payment = () => {
                     currency: "GHS",
                     ref: data.reference, // Use the backend-generated reference
                     callback:  (response) => {
-                        console.log("Payment Response:", response);
-                        toast.success(
-                            `Payment successful! Transaction Reference: ${response.reference}`
-                        );
 
-                        // order.paymentInfo = {
-                        //     id: response.reference,
-                        //     status: "Succeeded",
-                        //     type: "Paystack",
-                        // };
-
-                        // const config = {
-                        //     headers: {
-                        //         "Content-Type": "application/json",
-                        //     },
-                        // };
-
-                        // await axios.post(`${server}/order/create-order`, order, config)
-                        // .then((res) => {
-                        //     navigate("/order/success");
-                        //     toast.success("Order successful!");
-                        //     localStorage.setItem("cartItems", JSON.stringify([]));
-                        //     localStorage.setItem("latestOrder", JSON.stringify([]));
-                        //     window.location.reload();
-                        // })
-                        // .catch((error) => {
-                        //     toast.error(
-                        //         error.response?.data?.message || "Order creation failed."
-                        //     );
-                        // })
+                        processOrder(response.reference)
     
                         // Optionally verify the payment with the backend
                     },
@@ -98,6 +70,40 @@ const Payment = () => {
             toast.error(error.response?.data?.message || "An error occurred during payment.");
         }
     };
+
+    // Function to handle asynchronous order creation
+const processOrder = async (reference) => {
+    try {
+        // Attach payment info to the order object
+        order.paymentInfo = {
+            id: reference,
+            status: "Succeeded",
+            type: "Paystack",
+        };
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        };
+
+        // Create the order
+        await axios.post(`${server}/order/create-order`, order, config);
+
+        navigate("/order/success");
+        toast.success("Order successful!");
+
+        // Clear local storage
+        localStorage.setItem("cartItems", JSON.stringify([]));
+        localStorage.setItem("latestOrder", JSON.stringify([]));
+
+        window.location.reload();
+    } catch (error) {
+        toast.error(
+            error.response?.data?.message || "Order creation failed."
+        );
+    }
+};
 
     const cashOnDeliveryHandler = (e) => {
         e.preventDefault()

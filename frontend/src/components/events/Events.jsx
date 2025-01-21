@@ -19,7 +19,7 @@ const Events = () => {
                             {allEvents?.length > 0 ? (
                                 <EventCard data={allEvents[0]} />
                             ) : (
-                                <h4>No Events Available!</h4>
+                                <h4>No Event Available!</h4>
                             )}
                         </div>
                     </div>
