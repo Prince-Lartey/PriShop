@@ -14,6 +14,10 @@ const Payment = () => {
     const [paystackPublicKey, setPaystackPublicKey] = useState("");
 
     useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
+    useEffect(() => {
         async function getPaystackPublicKey() {
             const { data } = await axios.get(`${server}/payment/paystackapikey`);
             setPaystackPublicKey(data.paystackApiKey);

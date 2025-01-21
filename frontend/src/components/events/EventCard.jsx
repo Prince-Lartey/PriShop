@@ -3,14 +3,29 @@ import { backend_url } from "../../server.js"
 import styles from "../../styles/styles"
 import CountDown from "./CountDown.jsx"
 import { useDispatch, useSelector } from "react-redux"
+import { toast } from "react-toastify"
+import { addTocart } from "../../redux/actions/cart.js"
 
 const EventCard = ({ active, data }) => {
     const { cart } = useSelector((state) => state.cart);
     const dispatch = useDispatch();
 
-    const addToCartHandler = (data) => {
-        
-    }
+    const addToCartHandler = (id) => {
+        const isItemExists = cart?.find((item) => item._id === id);
+        if (isItemExists) {
+            toast.error("Item already in cart!");
+            return
+        }
+
+        if (data.stock < 1) {
+            toast.error("Product stock limited!");
+            return
+        } 
+
+        const cartData = { ...data, qty: 1 };
+        dispatch(addTocart(cartData));
+        toast.success("Item added to cart successfully!");
+    };
 
     return (
         <div className={`w-full block bg-white rounded-lg ${active ? "unset" : "mb-12"} lg:flex p-2`}>
