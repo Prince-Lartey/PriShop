@@ -13,6 +13,7 @@ import axios from "axios";
 import { RxCross1 } from "react-icons/rx";
 import { Country, State } from "country-state-city"
 import { FiLoader } from "react-icons/fi";
+import { getAllOrdersOfUser } from "../../redux/actions/order";
 
 const ProfileContent = ({ active }) => {
     const { user, error, successMessage } = useSelector((state) => state.user);
@@ -155,16 +156,13 @@ const ProfileContent = ({ active }) => {
 }
 
 const AllOrders = () => {
-    const orders = [
-        {
-            _id: "354525hhbr32hb5h3h",
-            orderItems: [
-                {name: "Iphone 14 pro max", },
-            ],
-            totalPrice: 1000,
-            orderStatus: "Processing"
-        }
-    ]
+    const { user } = useSelector((state) => state.user);
+    const { orders } = useSelector((state) => state.orders);
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(getAllOrdersOfUser(user._id));
+    }, []);
 
     const columns = [
         { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
@@ -203,13 +201,11 @@ const AllOrders = () => {
             sortable: false,
             renderCell: (params) => {
                 return (
-                <>
                     <Link to={`/user/order/${params.id}`}>
                         <Button>
                             <AiOutlineArrowRight size={20} />
                         </Button>
                     </Link>
-                </>
                 );
             },
         },
@@ -220,9 +216,9 @@ const AllOrders = () => {
     orders && orders.forEach((item) => {
         row.push({
             id: item._id,
-            itemsQty: item.orderItems.length,
+            itemsQty: item.cart[0].qty,
             total: "GH₵ " + item.totalPrice,
-            status: item.orderStatus,
+            status: item.status,
         });
     });
 
