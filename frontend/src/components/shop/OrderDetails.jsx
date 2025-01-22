@@ -4,7 +4,9 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import styles from "../../styles/styles";
 import { BsFillBagFill } from "react-icons/bs";
 import { getAllOrdersOfShop } from "../../redux/actions/order";
-import { backend_url } from "../../server";
+import { backend_url, server } from "../../server";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 
 const OrderDetails = () => {
@@ -22,8 +24,17 @@ const OrderDetails = () => {
     
     const data = orders && orders.find((item) => item._id === id);
 
-    const orderUpdateHandler = () => {
-        
+    const orderUpdateHandler = async () => {
+        await axios.put(`${server}/order/update-order-status/${id}`,
+        { status,},
+        { withCredentials: true })
+        .then((res) => {
+            toast.success("Order status updated!");
+            navigate("/dashboard-orders");
+        })
+        .catch((error) => {
+            toast.error(error.response.data.message);
+        });
     }
 
     return (
