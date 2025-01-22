@@ -4,9 +4,11 @@ import { getAllOrdersOfUser } from "../redux/actions/order";
 import { Link, useParams } from "react-router-dom";
 import styles from "../styles/styles";
 import { BsFillBagFill } from "react-icons/bs";
-import { backend_url } from "../server";
+import { backend_url, server } from "../server";
 import { RxCross1 } from "react-icons/rx";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const UserOrderDetails = () => {
     const { orders } = useSelector((state) => state.orders);
@@ -26,7 +28,25 @@ const UserOrderDetails = () => {
     const data = orders && orders.find((item) => item._id === id);
 
     const reviewHandler = async () => {
-
+        await axios.put(`${server}/product/create-new-review`,
+        {
+            user,
+            rating,
+            comment,
+            productId: selectedItem?._id,
+            orderId: id,
+        },
+        { withCredentials: true })
+        .then((res) => {
+            toast.success(res.data.message);
+            dispatch(getAllOrdersOfUser(user._id));
+            setComment("");
+            setRating(null);
+            setOpen(false);
+        })
+        .catch((error) => {
+            toast.error(error);
+        });
     }
 
     return (
