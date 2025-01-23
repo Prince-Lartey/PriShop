@@ -8,6 +8,7 @@ import { getAllProductsShop } from '../../redux/actions/product';
 import { addToWishlist, removeFromWishlist } from '../../redux/actions/wishlist';
 import { toast } from 'react-toastify';
 import { addTocart } from '../../redux/actions/cart';
+import Ratings from './Ratings';
 
 const ProductDetails = ({data}) => {
     const { user, isAuthenticated } = useSelector((state) => state.user);
@@ -66,6 +67,19 @@ const ProductDetails = ({data}) => {
         dispatch(addTocart(cartData));
         toast.success("Item added to cart successfully!");
     };
+
+    const totalReviewsLength = products && products.reduce((acc, product) => acc + product.reviews.length, 0);
+
+    const totalRatings = products && products.reduce(
+        (acc, product) =>
+            acc + product.reviews.reduce((sum, review) => sum + review.rating, 0),
+        0
+    );
+
+    const avg =  totalRatings / totalReviewsLength || 0;
+
+    const averageRating = avg.toFixed(1);
+
 
     const handleMessageSubmit = async () => {
 
@@ -148,7 +162,7 @@ const ProductDetails = ({data}) => {
                                             </h3>
                                         </Link>
                                         <h5 className="pb-3 text-[15px]">
-                                            (3/5) Ratings
+                                            ({averageRating}/5) Shop Rating
                                         </h5>
                                     </div>
                                     <div className={`${styles.button} bg-[#6443d1] mt-4 !rounded !h-11`} onClick={handleMessageSubmit}>
@@ -161,7 +175,7 @@ const ProductDetails = ({data}) => {
                         </div>
                     </div>
 
-                    <ProductDetailsInfo data={data} products={products}/>
+                    <ProductDetailsInfo data={data} products={products} totalReviewsLength={totalReviewsLength} averageRating={averageRating}/>
                     <br />
                     <br />
                 </div>
@@ -170,7 +184,7 @@ const ProductDetails = ({data}) => {
     )
 }
 
-const ProductDetailsInfo = ({data, products}) => {
+const ProductDetailsInfo = ({data, products, totalReviewsLength, averageRating}) => {
     const [active, setActive] = useState(1);
 
     return (
@@ -216,7 +230,7 @@ const ProductDetailsInfo = ({data, products}) => {
                             <div className="pl-2 ">
                                 <div className="w-full flex items-center">
                                     <h1 className="font-[500] mr-3">{item.user.name}</h1>
-                                    {/* <Ratings rating={data?.ratings} /> */}
+                                    <Ratings rating={data?.ratings} />
                                 </div>
                                 <p>{item.comment}</p>
                             </div>
@@ -240,13 +254,13 @@ const ProductDetailsInfo = ({data, products}) => {
                                 <div className="pl-3">
                                     <h3 className={`${styles.shop_name}`}>{data.shop.name}</h3>
                                     <h5 className="pb-2 text-[15px]">
-                                        (3/5) Ratings
+                                        ({averageRating}/5) Shop Rating
                                     </h5>
                                 </div>
                             </div>
                         </Link>
                         <p className="pt-2">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In eget elit dui. Morbi dui tellus, imperdiet tincidunt placerat ut, eleifend eu tortor. Cras pulvinar lorem et euismod accumsan. Morbi aliquet, est in gravida gravida, nulla nunc bibendum risus, ultrices ullamcorper est mi eu mauris. Proin pretium vehicula quam, vel suscipit nunc. Vestibulum ac orci sed mi eleifend consectetur condimentum eget magna. Integer mollis dignissim augue, ac venenatis nisl aliquam luctus. Aliquam eu cursus mauris, et eleifend felis. 
+                            {data.shop.description} 
                         </p>
                     </div>
 
@@ -266,7 +280,7 @@ const ProductDetailsInfo = ({data, products}) => {
                             </h5>
                             <h5 className="font-[600] pt-3">
                                 Total Reviews:{" "}
-                                <span className="font-[500]">312</span>
+                                <span className="font-[500]">{totalReviewsLength}</span>
                             </h5>
                             <Link to={`/shop/preview/${data.shop._id}`}>
                                 <div className={`${styles.button} !rounded-[4px] !h-[39.5px] mt-3`}>
