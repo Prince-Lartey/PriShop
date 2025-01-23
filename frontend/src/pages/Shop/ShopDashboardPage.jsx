@@ -1,3 +1,4 @@
+import DashboardHero from "../../components/shop/DashboardHero";
 import DashboardHeader from "../../components/shop/Layout/DashboardHeader"
 import DashboardSideBar from "../../components/shop/Layout/DashboardSideBar";
 
@@ -9,6 +10,7 @@ const ShopDashboardPage = () => {
                 <div className="w-[80px] 800px:w-[330px]">
                     <DashboardSideBar active={1} />
                 </div>
+                <DashboardHero />
             </div>
         </div>
     )
