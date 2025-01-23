@@ -80,7 +80,7 @@ const UserOrderDetails = () => {
 
             {data && data?.cart.map((item, index) => (
                 <div key={index} className="w-full flex items-start mb-5">
-                    <img src={`${backend_url}${data?.cart[0].images[0]}`} alt="" className="w-[80x] h-[80px]" />
+                    <img src={`${backend_url}${item?.images[0]}`} alt="" className="w-[80x] h-[80px]" />
                     <div className="w-full">
                         <h5 className="pl-3 text-[20px]">{item.name}</h5>
                         <h5 className="pl-3 text-[20px] text-[#00000091]">

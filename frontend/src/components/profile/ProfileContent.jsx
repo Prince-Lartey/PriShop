@@ -173,7 +173,7 @@ const AllOrders = () => {
             minWidth: 130,
             flex: 0.7,
             cellClassName: (params) => {
-                return params.row.status === "Delivered" ? "greenColor" : "redColor";
+                return params.row.status === "Delivered" || params.row.status === "Refund Successful" ? "greenColor" : "redColor";
             },
         },
         {
@@ -216,7 +216,7 @@ const AllOrders = () => {
     orders && orders.forEach((item) => {
         row.push({
             id: item._id,
-            itemsQty: item.cart[0].qty,
+            itemsQty: item.cart.length,
             total: "GH₵ " + item.totalPrice,
             status: item.status,
         });
@@ -245,7 +245,7 @@ const AllRefundOrders = () => {
         dispatch(getAllOrdersOfUser(user._id));
     }, []);
 
-    const eligibleOrders = orders && orders.filter((item) => item.status === "Processing refund");
+    const eligibleOrders = orders && orders.filter((item) => item.status === "Processing refund" || item.status === "Refund Successful");
 
     const columns = [
         { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
@@ -256,7 +256,7 @@ const AllRefundOrders = () => {
             minWidth: 130,
             flex: 0.7,
             cellClassName: (params) => {
-                return params.row.status === "Delivered" ? "greenColor" : "redColor";
+                return params.row.status === "Delivered" || params.row.status === "Refund Successful" ? "greenColor" : "redColor";
             },
         },
         {
@@ -299,7 +299,7 @@ const AllRefundOrders = () => {
     eligibleOrders && eligibleOrders.forEach((item) => {
         row.push({
             id: item._id,
-            itemsQty: item.cart[0].qty,
+            itemsQty: item.cart.length,
             total: "GH₵ " + item.totalPrice,
             status: item.status,
         });
@@ -336,7 +336,7 @@ const  TrackOrder = () => {
             minWidth: 130,
             flex: 0.7,
             cellClassName: (params) => {
-                return params.row.status === "Delivered" ? "greenColor" : "redColor";
+                return params.row.status === "Delivered" || params.row.status === "Refund Successful" ? "greenColor" : "redColor";
             },
         },
         {
@@ -379,7 +379,7 @@ const  TrackOrder = () => {
     orders && orders.forEach((item) => {
         row.push({
             id: item._id,
-            itemsQty: item.cart[0].qty,
+            itemsQty: item.cart.length,
             total: "GH₵ " + item.totalPrice,
             status: item.status,
         });
