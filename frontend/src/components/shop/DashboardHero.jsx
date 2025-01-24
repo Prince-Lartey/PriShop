@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { MdBorderClear, MdProductionQuantityLimits } from "react-icons/md";
 import { Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getAllOrdersOfShop } from "../../redux/actions/order";
 import { getAllProductsShop } from "../../redux/actions/product";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,11 +14,20 @@ const DashboardHero = () => {
     const { orders } = useSelector((state) => state.orders);
     const { seller } = useSelector((state) => state.seller);
     const { products } = useSelector((state) => state.products);
+    const [deliveredOrder, setDeliveredOrder] = useState(null)
 
     useEffect(() => {
         dispatch(getAllOrdersOfShop(seller._id));
         dispatch(getAllProductsShop(seller._id));
+
+        const orderData = orders?.filter((item) => item.status === "Delivered")
+        setDeliveredOrder(orderData)
     }, [dispatch]);
+
+    const totalEarningWithoutTax = deliveredOrder?.reduce((acc, item) => acc + item.totalPrice, 0)
+
+    const serviceCharge = totalEarningWithoutTax * 0.1
+    const availableBalance =  totalEarningWithoutTax - serviceCharge
 
     // const availableBalance = seller?.availableBalance.toFixed(2);
 
@@ -92,7 +101,7 @@ const DashboardHero = () => {
                             <span className="text-[16px]">(with 10% service charge)</span>
                         </h3>
                     </div>
-                    <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">GH₵ </h5>
+                    <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">GH₵ {availableBalance}</h5>
                     <Link to="/dashboard-withdraw-money">
                         <h5 className="pt-4 pl-[2] text-[#077f9c]">Withdraw Money</h5>
                     </Link>

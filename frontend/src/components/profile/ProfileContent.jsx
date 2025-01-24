@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid'
 import { MdOutlineTrackChanges } from "react-icons/md";
-import { deleteUserAddress, updateUserAddress, updateUserInformation } from "../../redux/actions/user";
+import { deleteUserAddress, loadUser, updateUserAddress, updateUserInformation } from "../../redux/actions/user";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { RxCross1 } from "react-icons/rx";
@@ -56,8 +56,8 @@ const ProfileContent = ({ active }) => {
                 headers: { "Content-Type": "multipart/form-data" },
                 withCredentials: true,
             });
-    
-            window.location.reload();
+            
+            dispatch(loadUser())
             toast.success("Avatar updated successfully!");
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to update avatar");
@@ -106,7 +106,6 @@ const ProfileContent = ({ active }) => {
                                     <label htmlFor="password" className="block pb-1">Enter your password</label>
                                     <div className="relative">
                                         <input type={visible ? "text" : "password"} className={`${styles.input} !w-[95%] mb-4 800px:mb-0 px-2`} required value={password} onChange={(e) => setPassword(e.target.value)}/>
-                                        {visible ? (<AiOutlineEye className="absolute right-8 top-1 cursor-pointer" size={25} onClick={() => setVisible(false)} />) : (<AiOutlineEyeInvisible className="absolute right-8 top-1 cursor-pointer" size={25} onClick={() => setVisible(true)}/>)}
                                     </div>
                                 </div>
                             </div>
