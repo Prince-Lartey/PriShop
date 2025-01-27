@@ -226,4 +226,42 @@ router.put( "/update-shop-avatar", isSeller, upload.single("image"), catchAsyncE
     }
 }));
 
+// update seller info
+router.put( "/update-seller-info", isSeller, catchAsyncErrors(async (req, res, next) => {
+    try {
+        const { name, description, email, address, phoneNumber, zipCode, password } = req.body;
+
+        const shop = await Shop.findOne({ email }).select("+password");
+
+        if (!shop) {
+            return next(new ErrorHandler("Shop not found", 400));
+        }
+
+        const isPasswordValid = await shop.comparePassword(password);
+
+        if (!isPasswordValid) {
+            return next(
+                new ErrorHandler("Enter correct password to update shop profile", 400)
+            );
+        }
+
+        shop.name = name;
+        shop.description = description;
+        shop.email = email;
+        shop.address = address;
+        shop.phoneNumber = phoneNumber;
+        shop.zipCode = zipCode;
+
+        await shop.save();
+
+        res.status(201).json({
+            success: true,
+            message: "Profile updated successfully!",
+            shop,
+        });
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+}));
+
 export default router
