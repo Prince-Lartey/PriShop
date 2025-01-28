@@ -8,7 +8,7 @@ import Loader from "../layout/Loader";
 import { DataGrid } from "@mui/x-data-grid";
 import { deleteEvent, getAllEventsShop } from "../../redux/actions/event";
 
-const AllEvents = () => {
+const AllEvents = ({ isEvent }) => {
     const { events, isLoading } = useSelector((state) => state.events)
     const { seller } = useSelector((state) => state.seller);
 
@@ -60,16 +60,12 @@ const AllEvents = () => {
             type: "number",
             sortable: false,
             renderCell: (params) => {
-                const d = params.row.name
-                const product_name = d.replace(/\s+/g, "-")
                 return (
-                    <>
-                        <Link to={`/product/${product_name}`}>
-                            <Button>
-                                <AiOutlineEye size={20} />
-                            </Button>
-                        </Link>
-                    </>
+                    <Link to={`/product/${params.id}?isEvent=true`}>
+                        <Button title="View product">
+                            <AiOutlineEye size={20} />
+                        </Button>
+                    </Link>
                 );
             },
         },
@@ -82,11 +78,9 @@ const AllEvents = () => {
             sortable: false,
             renderCell: (params) => {
                 return (
-                    <>
-                        <Button >
-                            <AiOutlineDelete size={20} onClick={() => handleDelete(params.id)}/>
-                        </Button>
-                    </>
+                    <Button title="Delete event product">
+                        <AiOutlineDelete size={20} onClick={() => handleDelete(params.id)}/>
+                    </Button>
                 );
             },
         },
@@ -100,7 +94,7 @@ const AllEvents = () => {
             name: item.name,
             price: "GH₵ " + item.discountPrice,
             Stock: item.stock,
-            sold: 10,
+            sold: item.sold_out,
         });
     });
 

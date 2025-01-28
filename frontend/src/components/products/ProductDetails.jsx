@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import styles from '../../styles/styles';
 import { AiFillHeart, AiOutlineHeart, AiOutlineMessage, AiOutlineShoppingCart } from 'react-icons/ai';
-import { backend_url } from '../../server';
+import { backend_url, server } from '../../server';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllProductsShop } from '../../redux/actions/product';
 import { addToWishlist, removeFromWishlist } from '../../redux/actions/wishlist';
 import { toast } from 'react-toastify';
 import { addTocart } from '../../redux/actions/cart';
 import Ratings from './Ratings';
+import axios from 'axios';
 
 const ProductDetails = ({data}) => {
     const { user, isAuthenticated } = useSelector((state) => state.user);
@@ -82,7 +83,26 @@ const ProductDetails = ({data}) => {
 
 
     const handleMessageSubmit = async () => {
-
+        if (isAuthenticated) {
+            const groupTitle = data._id + user._id;
+            const userId = user._id;
+            const sellerId = data.shop._id;
+            
+            await axios.post(`${server}/conversation/create-new-conversation`, 
+            {
+                groupTitle,
+                userId,
+                sellerId,
+            })
+            .then((res) => {
+                navigate(`/inbox?${res.data.conversation._id}`);
+            })
+            .catch((error) => {
+                toast.error(error.response.data.message);
+            });
+        } else {
+            toast.error("Please login to create a conversation");
+        }
     }
 
     return (
@@ -224,7 +244,7 @@ const ProductDetailsInfo = ({data, products, totalReviewsLength, averageRating})
 
             {active === 2 ? (
                 <div className="w-full min-h-[40vh] flex flex-col items-center py-3 overflow-y-scroll">
-                    {data && data.reviews.map((item, index) => (
+                    {data?.reviews.map((item, index) => (
                         <div key={index} className="w-full flex my-2">
                             <img src={`${backend_url}${item.user.avatar?.url}`} alt="" className="w-[50px] h-[50px] rounded-full" />
                             <div className="pl-2 ">

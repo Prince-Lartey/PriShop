@@ -59,16 +59,13 @@ const AllProducts = () => {
             type: "number",
             sortable: false,
             renderCell: (params) => {
-                const d = params.row.name
-                const product_name = d.replace(/\s+/g, "-")
+                
                 return (
-                    <>
-                        <Link to={`/product/${product_name}`}>
-                            <Button>
-                                <AiOutlineEye size={20} />
-                            </Button>
-                        </Link>
-                    </>
+                    <Link to={`/product/${params.id}`}>
+                        <Button title="View product">
+                            <AiOutlineEye size={20} />
+                        </Button>
+                    </Link>
                 );
             },
         },
@@ -81,11 +78,9 @@ const AllProducts = () => {
             sortable: false,
             renderCell: (params) => {
                 return (
-                    <>
-                        <Button >
-                            <AiOutlineDelete size={20} onClick={() => handleDelete(params.id)}/>
-                        </Button>
-                    </>
+                    <Button title="Delete product">
+                        <AiOutlineDelete size={20} onClick={() => handleDelete(params.id)} className="hover:text-red-500"/>
+                    </Button>
                 );
             },
         },
@@ -99,7 +94,7 @@ const AllProducts = () => {
             name: item.name,
             price: "GH₵ " + item.discountPrice,
             Stock: item.stock,
-            sold: 10,
+            sold: item.sold_out,
         });
     });
 
