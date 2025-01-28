@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "../../../styles/styles.js";
-import { AiFillHeart, AiFillStar, AiOutlineEye, AiOutlineHeart, AiOutlineShoppingCart, AiOutlineStar } from "react-icons/ai";
+import { AiFillHeart, AiOutlineEye, AiOutlineHeart, AiOutlineShoppingCart, } from "react-icons/ai";
 import ProductDetailsCard from "../ProductDetailsCard/ProductDetailsCard"
 import { backend_url } from "../../../server.js";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import { addToWishlist, removeFromWishlist } from "../../../redux/actions/wishlist.js"
 import Ratings from "../../products/Ratings.jsx";
 
-const ProductCard = ({ data, isEvent  }) => {
+const ProductCard = ({ data, isEvent }) => {
     const { cart } = useSelector((state) => state.cart)
     const { wishlist } = useSelector((state) => state.wishlist);
     const [click, setClick] = useState(false);
@@ -57,7 +57,7 @@ const ProductCard = ({ data, isEvent  }) => {
         
         <div className="w-full h-[370px] bg-white rounded-lg shadow-sm p-3 relative cursor-pointer">
             <div className="flex justify-end"></div>
-            <Link to={`/product/${data._id}`}>
+            <Link to={`${isEvent === true ? `/product/${data._id}?isEvent=true` : `/product/${data._id}`}`}>
                 <img src={`${backend_url}${data.images && data.images[0]}`} alt="" className="w-full h-[170px] object-contain"/>
             </Link>
 

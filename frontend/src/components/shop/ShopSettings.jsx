@@ -84,13 +84,13 @@ const ShopSettings = () => {
                     <div className="w-full 800px:flex block 800px:pb-5">
                         <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
                             <div className="w-full pl-[3%]">
-                                <label htmlFor="shopName" className="block pb-2">Shop Name</label>
+                                <label htmlFor="shopName" className="block pb-1">Shop Name</label>
                             </div>
                             <input type="name" placeholder={`${seller.name}`} value={name} onChange={(e) => setName(e.target.value)} className={`${styles.input} !w-[95%] mb-4 800px:mb-0`} required />
                         </div>
                         <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
                             <div className="w-full pl-[3%]">
-                                <label htmlFor="description" className="block pb-2">Shop Email</label>
+                                <label htmlFor="description" className="block pb-1">Shop Email</label>
                             </div>
                             <input type="name" placeholder={`${ seller?.email ? seller.email : "Enter your shop description"}`} value={email}  onChange={(e) => setEmail(e.target.value)} readOnly disabled className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}/>
                         </div>
@@ -99,23 +99,23 @@ const ShopSettings = () => {
                     <div className="w-full 800px:flex block 800px:pb-5">
                         <div className="w-[100%] flex items-center flex-col">
                             <div className="w-full pl-[1.5%]">
-                                <label htmlFor="description" className="block pb-2">Shop Description</label>
+                                <label htmlFor="description" className="block pb-1">Shop Description</label>
                             </div>
-                            <textarea rows={5} type="name" placeholder={`${ seller?.description ? seller.description : "Enter your shop description"}`} value={description}  onChange={(e) => setDescription(e.target.value)} className={`${styles.input} !w-[97%] mb-4 800px:mb-0`}/>
+                            <textarea rows={10} type="name" placeholder={`${ seller?.description ? seller.description : "Enter your shop description"}`} value={description}  onChange={(e) => setDescription(e.target.value)} className={`${styles.input} !w-[97%] mb-4 800px:mb-0`}/>
                         </div>
                     </div>
 
                     <div className="w-full 800px:flex block 800px:pb-5">
                         <div className="w-[100%] flex items-center flex-col 800px:w-[50%] ">
                             <div className="w-full pl-[3%]">
-                                <label htmlFor="address" className="block pb-2">Shop Address</label>
+                                <label htmlFor="address" className="block pb-1">Shop Address</label>
                             </div>
                             <input type="name" placeholder={seller?.address} value={address} onChange={(e) => setAddress(e.target.value)} className={`${styles.input} !w-[95%] mb-4 800px:mb-0`} required />
                         </div>
 
                         <div className="w-[100%] flex items-center flex-col 800px:w-[50%]">
                             <div className="w-full pl-[3%]">
-                                <label htmlFor="number" className="block pb-2">Shop Phone Number</label>
+                                <label htmlFor="number" className="block pb-1">Shop Phone Number</label>
                             </div>
                             <input type="number" placeholder={seller?.phoneNumber} value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} className={`${styles.input} !w-[95%] mb-4 800px:mb-0`} required />
                         </div>
@@ -124,16 +124,16 @@ const ShopSettings = () => {
                     <div className="w-full 800px:flex block 800px:pb-5">
                         <div className="w-[100%] flex items-center flex-col 800px:w-[50%]">
                             <div className="w-full pl-[3%]">
-                                <label htmlFor="zipCode" className="block pb-2">Shop Zip Code</label>
+                                <label htmlFor="zipCode" className="block pb-1">Shop Zip Code</label>
                             </div>
                             <input type="number" placeholder={seller?.zipCode} value={zipCode} onChange={(e) => setZipCode(e.target.value)} className={`${styles.input} !w-[95%] mb-4 800px:mb-0`} required />
                         </div>
 
                         <div className="w-[100%] flex items-center flex-col 800px:w-[50%]">
                             <div className="w-full pl-[3%]">
-                                <label htmlFor="password" className="block pb-2">Enter your Password</label>
+                                <label htmlFor="password" className="block pb-1">Enter your Password</label>
                             </div>
-                            <input type="password"  onChange={(e) => setPassword(e.target.value)} className={`${styles.input} !w-[95%] mb-4 800px:mb-0`} required />
+                            <input type="password" placeholder='********' onChange={(e) => setPassword(e.target.value)} className={`${styles.input} !w-[95%] mb-4 800px:mb-0`} required />
                         </div>
                     </div>
 
