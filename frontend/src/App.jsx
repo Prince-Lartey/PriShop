@@ -1,7 +1,7 @@
 import { Slide, ToastContainer } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css"; 
 import { LoginPage, SignupPage, ActivationPage, HomePage, ProductsPage, BestSellingPage, EventsPage, FAQPage, ProductDetailsPage, ProfilePage, CheckoutPage, ShopCreatePage, SellerActivationPage, ShopLoginPage, PaymentPage, OrderSuccessPage, OrderDetailsPage, TrackOrderPage } from './Routes/Routes.js'
-import { ShopDashboardPage, ShopCreateProduct, ShopAllProducts, ShopCreateEvents, ShopAllEvents, ShopAllCoupons, ShopPreviewPage, ShopAllOrders, ShopOrderDetails, ShopAllRefunds, ShopSettingsPage, ShopWithDrawMoneyPage } from './Routes/ShopRoutes.js';
+import { ShopDashboardPage, ShopCreateProduct, ShopAllProducts, ShopCreateEvents, ShopAllEvents, ShopAllCoupons, ShopPreviewPage, ShopAllOrders, ShopOrderDetails, ShopAllRefunds, ShopSettingsPage, ShopWithDrawMoneyPage, ShopInboxPage } from './Routes/ShopRoutes.js';
 import { ShopHomePage } from "./ShopRoutes.js";
 import './App.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom"
@@ -127,6 +127,11 @@ const App = () => {
                         <ShopWithDrawMoneyPage />
                     </SellerProtectedRoute>
                 } />
+                <Route path="/dashboard-messages" element={
+                    <SellerProtectedRoute>
+                        <ShopInboxPage />
+                    </SellerProtectedRoute>
+                }/>
             </Routes>
             <ToastContainer position="top-center" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick={false} rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" transition={Slide} />        
         </BrowserRouter>
