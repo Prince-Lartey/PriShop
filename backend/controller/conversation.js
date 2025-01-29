@@ -71,4 +71,23 @@ router.get("/get-all-conversation-user/:id", isAuthenticated, catchAsyncErrors(a
     }
 }));
 
+// update the last message
+router.put( "/update-last-message/:id", catchAsyncErrors(async (req, res, next) => {
+    try {
+        const { lastMessage, lastMessageId } = req.body;
+
+        const conversation = await Conversation.findByIdAndUpdate(req.params.id, {
+            lastMessage,
+            lastMessageId,
+        });
+
+        res.status(201).json({
+            success: true,
+            conversation,
+        });
+    } catch (error) {
+    return next(new ErrorHandler(error), 500);
+    }
+}));
+
 export default router

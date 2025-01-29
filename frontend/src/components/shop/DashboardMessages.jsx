@@ -1,15 +1,44 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { server } from "../../server";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowRight, AiOutlineSend } from "react-icons/ai";
 import { TfiGallery } from "react-icons/tfi"
+import { format } from "timeago.js"
+import styles from "../../styles/styles";
+
+import socketIO from "socket.io-client"
+const ENDPOINT = "http://localhost:4000/";
+const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
 
 const DashboardMessages = () => {
     const { seller, isLoading } = useSelector((state) => state.seller);
     const [conversations, setConversations] = useState([]);
     const [open, setOpen] = useState(false);
+    const [arrivalMessage, setArrivalMessage] = useState(null);
+    const [currentChat, setCurrentChat] = useState();
+    const [messages, setMessages] = useState([]);
+    const [userData, setUserData] = useState(null);
+    const [newMessage, setNewMessage] = useState("");
+    const [onlineUsers, setOnlineUsers] = useState([]);
+    const [activeStatus, setActiveStatus] = useState(false);
+    const [images, setImages] = useState();
+    const scrollRef = useRef(null);
+
+    useEffect(() => {
+        socketId.on("getMessage", (data) => {
+            setArrivalMessage({
+                sender: data.senderId,
+                text: data.text,
+                createdAt: Date.now(),
+            });
+        });
+    }, []);
+
+    useEffect(() => {
+        arrivalMessage && currentChat?.members.includes(arrivalMessage.sender) && setMessages((prev) => [...prev, arrivalMessage]);
+    }, [arrivalMessage, currentChat]);
 
     useEffect(() => {
         const getConversation = async () => {
@@ -27,23 +56,91 @@ const DashboardMessages = () => {
         getConversation();
     }, [seller,]);
 
+    // get messages
+    useEffect(() => {
+        const getMessage = async () => {
+            try {
+                const response = await axios.get(`${server}/message/get-all-messages/${currentChat?._id}`);
+                setMessages(response.data.messages);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        getMessage();
+    }, [currentChat]);
+
+    // create new message
+    const sendMessageHandler = async (e) => {
+        e.preventDefault();
+
+        const message = {
+            sender: seller._id,
+            text: newMessage,
+            conversationId: currentChat._id,
+        };
+
+        const receiverId = currentChat.members.find(
+            (member) => member.id !== seller._id
+        );
+
+        socketId.emit("sendMessage", {
+            senderId: seller._id,
+            receiverId,
+            text: newMessage,
+        });
+
+        try {
+            if (newMessage !== "") {
+                await axios.post(`${server}/message/create-new-message`, message)
+                .then((res) => {
+                    setMessages([...messages, res.data.message]);
+                    updateLastMessage();
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const updateLastMessage = async () => {
+        socketId.emit("updateLastMessage", {
+            lastMessage: newMessage,
+            lastMessageId: seller._id,
+        });
+    
+        await axios.put(`${server}/conversation/update-last-message/${currentChat._id}`, {
+            lastMessage: newMessage,
+            lastMessageId: seller._id,
+        })
+        .then((res) => {
+            console.log(res.data.conversation);
+            setNewMessage("");
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    };
+
     return (
         <div className="w-[90%] bg-white m-5 h-[85vh] overflow-y-scroll rounded">
             <h1 className="text-center text-[30px] py-3 font-Poppins">All Messages</h1>
 
 
             {conversations && conversations.map((item, index) => (
-                <MessageList data={item} key={index} index={index} setOpen={setOpen}/>
+                <MessageList data={item} key={index} index={index} setOpen={setOpen} setCurrentChat={setCurrentChat} me={seller._id} setUserData={setUserData} userData={userData} online={onlineCheck(item)} setActiveStatus={setActiveStatus} isLoading={isLoading}/>
             ))}
 
             {open && (
-                <SellerInbox setOpen={setOpen} />
+                <SellerInbox setOpen={setOpen} newMessage={newMessage} setNewMessage={setNewMessage} sendMessageHandler={sendMessageHandler} messages={messages} sellerId={seller._id} userData={userData} activeStatus={activeStatus} scrollRef={scrollRef} setMessages={setMessages} handleImageUpload={handleImageUpload}/>
             )}
         </div>
     )
 }
 
-const MessageList = ({ data, index, setOpen}) => {
+const MessageList = ({ data, index, setOpen, setCurrentChat, me, setUserData, online, setActiveStatus, isLoading}) => {
     const [user, setUser] = useState([]);
     const navigate = useNavigate();
 
@@ -54,8 +151,22 @@ const MessageList = ({ data, index, setOpen}) => {
 
     const [active, setActive] = useState(0);
 
+    useEffect(() => {
+        const userId = data.members.find((user) => user != me);
+    
+        const getUser = async () => {
+            try {
+                const res = await axios.get(`${server}/user/user-info/${userId}`);
+                setUser(res.data.user);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        getUser();
+    }, [me, data]);
+
     return (
-        <div className={`w-full flex p-3 px-3 ${ active === index ? "bg-[#00000010]" : "bg-transparent" }  cursor-pointer`} onClick={(e) => setActive(index) || handleClick(data._id) }>
+        <div className={`w-full flex p-3 px-3 ${ active === index ? "bg-[#00000010]" : "bg-transparent" }  cursor-pointer`} onClick={(e) => setActive(index) || handleClick(data._id) || setCurrentChat(data) || setUserData(user) || setActiveStatus(online)}>
             <div className="relative">
                 Beef
             </div>
@@ -63,7 +174,7 @@ const MessageList = ({ data, index, setOpen}) => {
     )
 }
 
-const SellerInbox = ({ setOpen}) => {
+const SellerInbox = ({ setOpen, scrollRef, newMessage, setNewMessage, sendMessageHandler, messages, sellerId, userData, activeStatus, handleImageUpload,}) => {
 
     return (
         <div className="w-full min-h-full flex flex-col justify-between">
@@ -80,7 +191,27 @@ const SellerInbox = ({ setOpen}) => {
 
             {/* messages */}
             <div className="px-3 h-[65vh] py-3 overflow-y-scroll">
-                
+                {messages && messages.map((item, index) => {
+                    return (
+                        <div className={`flex w-full my-2 ${ item.sender === sellerId ? "justify-end" : "justify-start"}`} ref={scrollRef} key={index}>
+                            {item.sender !== sellerId && (
+                                <img src={`${userData?.avatar?.url}`} className="w-[40px] h-[40px] rounded-full mr-3" alt=""/>
+                            )}
+                            {item.images && (
+                                <img src={`${item.images?.url}`} className="w-[300px] h-[300px] object-cover rounded-[10px] mr-2"/>
+                            )}
+                            {item.text !== "" && (
+                                <div>
+                                    <div className={`w-max p-2 rounded ${ item.sender === sellerId ? "bg-[#000]" : "bg-[#38c776]"} text-[#fff] h-min`}>
+                                        <p>{item.text}</p>
+                                    </div>
+
+                                    <p className="text-[12px] text-[#000000d3] pt-1">{format(item.createdAt)}</p>
+                                </div>
+                            )}
+                        </div>
+                    );
+                })}
             </div>
 
             {/* send message input */}

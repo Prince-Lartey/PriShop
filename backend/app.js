@@ -12,6 +12,7 @@ import coupon from "./controller/couponCode.js"
 import payment from "./controller/payment.js"
 import order from "./controller/order.js"
 import conversation from "./controller/conversation.js"
+import message from "./controller/message.js"
 
 const app = express()
 
@@ -37,6 +38,7 @@ app.use("/api/v2/coupon", coupon)
 app.use("/api/v2/payment", payment)
 app.use("/api/v2/order", order)
 app.use("/api/v2/conversation", conversation)
+app.use("/api/v2/message", message)
 
 // ErrorHandling
 app.use(errorHandler)
