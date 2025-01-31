@@ -2,7 +2,7 @@ import express from "express"
 import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
 import Order from "../model/order.js";
 import ErrorHandler from "../utils/ErrorHandler.js";
-import { isSeller } from "../middleware/auth.js";
+import { isAdmin, isAuthenticated, isSeller } from "../middleware/auth.js";
 import Product from "../model/product.js"
 import Shop from "../model/shop.js";
 
@@ -188,6 +188,22 @@ router.put("/order-refund-success/:id", isSeller, catchAsyncErrors(async (req, r
         }
     } catch (error) {
     return next(new ErrorHandler(error.message, 500));
+    }
+}));
+
+// all orders --- for admin
+router.get("/admin-all-orders", isAuthenticated, isAdmin("Admin"), catchAsyncErrors(async (req, res, next) => {
+    try {
+        const orders = await Order.find().sort({
+            deliveredAt: -1,
+            createdAt: -1,
+        });
+        res.status(201).json({
+            success: true,
+            orders,
+        });
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
     }
 }));
 

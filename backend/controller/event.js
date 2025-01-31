@@ -4,7 +4,7 @@ import Event from "../model/event.js";
 import Shop from "../model/shop.js";
 import ErrorHandler from "../utils/ErrorHandler.js";
 import upload from "../multer.js";
-import { isSeller } from "../middleware/auth.js";
+import { isAdmin, isAuthenticated, isSeller } from "../middleware/auth.js";
 import fs from "fs"
 
 const router = express.Router()
@@ -93,6 +93,19 @@ router.delete("/delete-shop-event/:id", isSeller, catchAsyncErrors(async (req, r
         });
     } catch (error) {
         return next(new ErrorHandler(error, 400));
+    }
+}));
+
+// all events --- for admin
+router.get( "/admin-all-events", isAuthenticated, isAdmin("Admin"), catchAsyncErrors(async (req, res, next) => {
+    try {
+        const events = await Event.find().sort({ createdAt: -1,});
+        res.status(201).json({
+            success: true,
+            events,
+        });
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
     }
 }));
 

@@ -5,7 +5,7 @@ import ErrorHandler from "../utils/ErrorHandler.js";
 import Shop from "../model/shop.js";
 import Order from "../model/order.js"
 import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
-import { isAuthenticated, isSeller } from "../middleware/auth.js";
+import { isAdmin, isAuthenticated, isSeller } from "../middleware/auth.js";
 import fs from "fs"
 
 const router = express.Router();
@@ -144,5 +144,19 @@ router.put( "/create-new-review", isAuthenticated, catchAsyncErrors(async (req, 
     }
 }));
 
+// all products --- for admin
+router.get("/admin-all-products", isAuthenticated, isAdmin("Admin"), catchAsyncErrors(async (req, res, next) => {
+    try {
+        const products = await Product.find().sort({
+            createdAt: -1,
+        });
+        res.status(201).json({
+            success: true,
+            products,
+        });
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+}));
 
 export default router
