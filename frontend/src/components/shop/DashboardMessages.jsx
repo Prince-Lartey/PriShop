@@ -178,7 +178,7 @@ const DashboardMessages = () => {
                     updateLastMessageForImage();
                 });
         } catch (error) {
-            console.log(error);
+            console.error("Axios Error:", error.message);
         }
     };
     
@@ -289,7 +289,7 @@ const SellerInbox = ({ setOpen, scrollRef, newMessage, setNewMessage, sendMessag
                             {item.images && (
                                 <img src={item.images.startsWith("data:image") ? item.images : `${backend_url}${item.images}`} alt="" className="w-[300px] h-[300px] object-cover rounded-[10px] mr-2"/>
                             )}
-                            {item.text !== "" && (
+                            {item.text !== "" &&  (
                                 <div>
                                     <div className={`w-max p-2 rounded ${ item.sender === sellerId ? "bg-[#000]" : "bg-[#38c776]"} text-[#fff] h-min`}>
                                         <p>{item.text}</p>

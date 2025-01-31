@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowRight, AiOutlineSend } from "react-icons/ai";
 import { TfiGallery } from "react-icons/tfi";
 import styles from "../styles/styles";
+import { toast } from "react-toastify";
 
 const ENDPOINT = "http://localhost:4000/";
 const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
@@ -167,6 +168,7 @@ const UserInbox = () => {
         });
 
         try {
+            
         await axios.post(`${server}/message/create-new-message`,
             {
                 images: e,
@@ -180,7 +182,7 @@ const UserInbox = () => {
                 updateLastMessageForImage();
             });
         } catch (error) {
-            console.log(error);
+            toast.error("Failed to send image. Try again later.")
         }
     };
 
