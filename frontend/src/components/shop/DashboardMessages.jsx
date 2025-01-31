@@ -287,7 +287,7 @@ const SellerInbox = ({ setOpen, scrollRef, newMessage, setNewMessage, sendMessag
                                 <img src={`${backend_url}${userData?.avatar?.url}`} className="w-[40px] h-[40px] rounded-full mr-3" alt=""/>
                             )}
                             {item.images && (
-                                <img src={`${backend_url}${item.images?.url}`} className="w-[300px] h-[300px] object-cover rounded-[10px] mr-2"/>
+                                <img src={item.images.startsWith("data:image") ? item.images : `${backend_url}${item.images}`} alt="" className="w-[300px] h-[300px] object-cover rounded-[10px] mr-2"/>
                             )}
                             {item.text !== "" && (
                                 <div>
