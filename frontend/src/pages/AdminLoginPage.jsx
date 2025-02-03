@@ -28,7 +28,7 @@ const AdminLoginPage = () => {
                 
                 if (res.data.success === true) {
                     toast.success("Login Successful!");
-                    navigate("/");
+                    navigate("/admin/dashboard");
                     window.location.reload(true);
                 }
                 
