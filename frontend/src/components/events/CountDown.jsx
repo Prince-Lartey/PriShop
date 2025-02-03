@@ -2,6 +2,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { server } from "../../server";
 
+const token = localStorage.getItem("token")
+
 const CountDown = ({data}) => {
     const [timeLeft, setTimeLeft] = useState(() => calculateTimeLeft(data.finish_Date));
 
@@ -19,11 +21,11 @@ const CountDown = ({data}) => {
 
         return () => clearInterval(timer); // Cleanup interval when component unmounts
     }, [data.finish_Date]); // Run only when finish_Date changes
+    
 
     async function deleteEvent() {
         try {
-            await axios.delete(`${server}/event/delete-shop-event/${data._id}`);
-            console.log("Event deleted successfully");
+            await axios.delete(`${server}/event/delete-shop-event/${data._id}`, { headers: { Authorization: `Bearer ${token}` }, withCredentials: true,});
         } catch (error) {
             console.error("Error deleting event:", error);
         }

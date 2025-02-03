@@ -40,14 +40,14 @@ const EventCard = ({ active, data }) => {
                 <div className="flex py-2 justify-between">
                     <div className="flex">
                         <h5 className="font-bold text-[20px] text-[#333] pr-3 font-Roboto">
-                            ₵ {data.originalPrice}
+                            ₵ {data.discountPrice}
                         </h5>
                         <h5 className="font-[500] text-[18px] text-[#d55b45] line-through">
-                            GH₵ {data.discountPrice}
+                            GH₵ {data.originalPrice}
                         </h5>
                     </div>
                     <span className="pr-3 font-[400] text-[17px] text-[#44a55e]">
-                        {data.sold_out} Sold
+                        {data.sold_out} 
                     </span>
                 </div>
                 <CountDown data={data}/>

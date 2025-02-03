@@ -26,3 +26,8 @@ export const signInShopSchema = yup.object({
     email: yup.string().trim().email("Email must be a valid email address").required("A valid email is required"),
     password: yup.string().trim().required("Password is required"),
 })
+
+export const adminRegisterSchema = yup.object({
+    email: yup.string().trim().email("Email must be a valid email address").required("A valid email is required"),
+    password: yup.string().trim().min(8, "Password must not be less than 8 characters").matches(passwordRules, { message: "Provide a stronger password" }).required("Password is required"),
+})
