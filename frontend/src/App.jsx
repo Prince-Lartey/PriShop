@@ -2,7 +2,7 @@ import { Slide, ToastContainer } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css"; 
 import { LoginPage, SignupPage, ActivationPage, HomePage, ProductsPage, BestSellingPage, EventsPage, FAQPage, ProductDetailsPage, ProfilePage, CheckoutPage, ShopCreatePage, SellerActivationPage, ShopLoginPage, PaymentPage, OrderSuccessPage, OrderDetailsPage, TrackOrderPage, UserInbox } from './Routes/Routes.js'
 import { ShopDashboardPage, ShopCreateProduct, ShopAllProducts, ShopCreateEvents, ShopAllEvents, ShopAllCoupons, ShopPreviewPage, ShopAllOrders, ShopOrderDetails, ShopAllRefunds, ShopSettingsPage, ShopWithDrawMoneyPage, ShopInboxPage } from './Routes/ShopRoutes.js';
-import { AdminLoginPage, AdminDashboardPage, AdminDashboardUsers, AdminDashboardSellers } from './Routes/AdminRoutes.js'
+import { AdminLoginPage, AdminDashboardPage, AdminDashboardUsers, AdminDashboardSellers, AdminDashboardOrders } from './Routes/AdminRoutes.js'
 import { ShopHomePage } from "./ShopRoutes.js";
 import './App.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom"
@@ -156,7 +156,12 @@ const App = () => {
                     <ProtectedAdminRoute>
                         <AdminDashboardSellers />
                     </ProtectedAdminRoute>
-                } />
+                }/>
+                <Route path="/admin-orders" element={
+                    <ProtectedAdminRoute>
+                        <AdminDashboardOrders />
+                    </ProtectedAdminRoute>
+                }/>
             </Routes>
             <ToastContainer position="top-center" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick={false} rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" transition={Slide} />        
         </BrowserRouter>

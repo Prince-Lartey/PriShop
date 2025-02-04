@@ -73,7 +73,7 @@ const AllUsers = () => {
             renderCell: (params) => {
                 return (
                     <Button onClick={() => setUserId(params.id) || setOpen(true)}>
-                        <AiOutlineDelete size={20} />
+                        <AiOutlineDelete size={20} className="hover:text-red-500" title="Delete User"/>
                     </Button>
                 );
             },
