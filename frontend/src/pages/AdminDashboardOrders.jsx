@@ -76,22 +76,21 @@ const AdminDashboardOrders = () => {
                             <Loader />
                         ) : (
                             <div className="w-full flex justify-center pt-5">
-                            <div className="w-[97%]">
-                                <h3 className="text-[22px] font-Poppins pb-2">All Orders</h3>
-                                <div className="w-full min-h-[45vh] bg-white rounded">
-                                    <DataGrid
-                                        rows={row}
-                                        columns={columns}
-                                        pageSize={10}
-                                        disableSelectionOnClick
-                                        autoHeight
-                                    />
+                                <div className="w-[97%]">
+                                    <h3 className="text-[22px] font-Poppins pb-2">All Orders</h3>
+                                    <div className="w-full min-h-[45vh] bg-white rounded">
+                                        <DataGrid
+                                            rows={row}
+                                            columns={columns}
+                                            pageSize={10}
+                                            disableSelectionOnClick
+                                            autoHeight
+                                        />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         )
                     }
-                    
                 </div>
             </div>
         </div>
