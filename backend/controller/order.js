@@ -123,7 +123,7 @@ router.put("/update-order-status/:id", isSeller, catchAsyncErrors(async (req, re
         async function updateSellerInfo(amount) {
             const seller = await Shop.findById(req.seller.id);
             
-            seller.availableBalance += amount;
+            seller.availableBalance = amount;
     
             await seller.save();
         }

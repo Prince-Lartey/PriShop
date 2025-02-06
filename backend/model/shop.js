@@ -46,18 +46,32 @@ const shopSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    subaccountCode: {
-        type: String,
-        required: false, // Generated after successful Paystack integration
+    withdrawMethod: {
+        type: Object,
     },
-    commissionPercentage: {
+    availableBalance: {
         type: Number,
-        default: 2.5, // Default commission percentage
+        default: 0,
     },
-    isVerified: {
-        type: Boolean,
-        default: false, // Updated to true after successful verification
-    },
+    transections: [
+        {
+            amount: {
+                type: Number,
+                required: true,
+            },
+            status: {
+                type: String,
+                default: "Processing",
+            },
+            createdAt: {
+                type: Date,
+                default: Date.now(),
+            },
+            updatedAt: {
+                type: Date,
+            },
+        },
+    ],
     createdAt: {
         type: Date,
         default: Date.now(),

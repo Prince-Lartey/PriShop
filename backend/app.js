@@ -14,6 +14,7 @@ import order from "./controller/order.js"
 import conversation from "./controller/conversation.js"
 import message from "./controller/message.js"
 import admin from "./controller/admin.js"
+import withdraw from "./controller/withdraw.js"
 
 const app = express()
 
@@ -42,6 +43,7 @@ app.use("/api/v2/order", order)
 app.use("/api/v2/conversation", conversation)
 app.use("/api/v2/message", message)
 app.use("/api/v2/admin", admin)
+app.use("/api/v2/withdraw", withdraw)
 
 // ErrorHandling
 app.use(errorHandler)
