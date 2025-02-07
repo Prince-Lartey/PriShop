@@ -47,7 +47,15 @@ const shopSchema = new mongoose.Schema({
         required: true,
     },
     withdrawMethod: {
-        type: Object,
+        networkProvider: {
+            type: String,
+        },
+        mobileNumber: {
+            type: String,
+        }
+    },
+    paystackRecipientCode: {
+        type: String,
     },
     availableBalance: {
         type: Number,

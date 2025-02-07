@@ -12,58 +12,50 @@ import { AiOutlineDelete } from 'react-icons/ai';
 const WithdrawMoney = () => {
     const [open, setOpen] = useState(false);
     const dispatch = useDispatch();
-    const { orders } = useSelector((state) => state.orders);
     const { seller } = useSelector((state) => state.seller);
-    const [deliveredOrder, setDeliveredOrder] = useState(null)
     const [paymentMethod, setPaymentMethod] = useState(false);
     const [withdrawAmount, setWithdrawAmount] = useState(50);
-    const [bankInfo, setBankInfo] = useState({
-        bankName: "",
-        bankCountry: "",
-        bankSwiftCode: null,
-        bankAccountNumber: null,
-        bankHolderName: "",
-        bankAddress: "",
-    });
+    const [networkProvider, setNetworkProvider] = useState('');
+    const [mobileNumber, setMobileNumber] = useState('');
+
+    // Validation function
+    const validateMobileNumber = (network, number) => {
+        const validPrefixes = {
+            'MTN': ['024', '025', '054', '055', '059', '053'],
+            'Vodafone': ['020', '050'],
+            'AirtelTigo': ['026', '056', '027', '057']
+        };
+
+        if (!validPrefixes[network]?.some(prefix => number.startsWith(prefix))) {
+            toast.error(`Invalid number for ${network}.`);
+            return false;
+        }
+        return true;
+    };
 
     useEffect(() => {
         dispatch(getAllOrdersOfShop(seller._id));
     }, [dispatch]);
 
+    // Handle adding a new withdrawal method (Paystack recipient)
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
-        const withdrawMethod = {
-            bankName: bankInfo.bankName,
-            bankCountry: bankInfo.bankCountry,
-            bankSwiftCode: bankInfo.bankSwiftCode,
-            bankAccountNumber: bankInfo.bankAccountNumber,
-            bankHolderName: bankInfo.bankHolderName,
-            bankAddress: bankInfo.bankAddress,
-        };
+
+        if (!validateMobileNumber(networkProvider, mobileNumber)) return;
 
         setPaymentMethod(false);
 
-        await axios.put(`${server}/shop/update-payment-methods`,
-            {
-                withdrawMethod,
-            },
-            { withCredentials: true }
-        )
-        .then((res) => {
+        await axios.post(`${server}/withdraw/create-recipient`, {
+            name: seller.name,
+            mobileNumber,
+            networkProvider,
+        }, { withCredentials: true })
+        .then(() => {
             toast.success("Withdraw method added successfully!");
             dispatch(loadSeller());
-            setBankInfo({
-                bankName: "",
-                bankCountry: "",
-                bankSwiftCode: null,
-                bankAccountNumber: null,
-                bankHolderName: "",
-                bankAddress: "",
-            });
         })
         .catch((error) => {
-            console.log(error.response.data.message);
+            toast.error(error.response?.data?.message || "Failed to add withdraw method.");
         });
     };
 
@@ -71,7 +63,7 @@ const WithdrawMoney = () => {
         await axios.delete(`${server}/shop/delete-withdraw-method`, {
             withCredentials: true,
         })
-        .then((res) => {
+        .then(() => {
             toast.success("Withdraw method deleted successfully!");
             dispatch(loadSeller());
         });
@@ -84,18 +76,22 @@ const WithdrawMoney = () => {
     const withdrawHandler = async () => {
         if (withdrawAmount < 50 || withdrawAmount > availableBalance) {
             toast.error("You can't withdraw this amount!");
-        } else {
-            const amount = withdrawAmount;
-            await axios.post(`${server}/withdraw/create-withdraw-request`,
-                { amount },
-                { withCredentials: true }
-            )
-            .then((res) => {
-                toast.success("Withdraw money request is successful!");
-                setOpen(false)
-            });
+            return;
         }
-    };
+
+        await axios.post(`${server}/withdraw/create-withdraw-request`,
+            { amount: withdrawAmount,},
+            { withCredentials: true }
+        )
+        .then(() => {
+            toast.success("Withdrawal request sent successfully!");
+            setOpen(false);
+        })
+        .catch((error) => {
+            toast.error(error.response?.data?.message || "Withdrawal failed.");
+        })
+    }
+    
 
     const availableBalance = seller?.availableBalance.toFixed(2)
 
@@ -112,7 +108,7 @@ const WithdrawMoney = () => {
 
             {open && (
                 <div className="w-full h-screen z-[9999] fixed top-0 left-0 flex items-center justify-center bg-[#0000004e]">
-                    <div className={`w-[95%] 800px:w-[50%] bg-white shadow rounded ${ paymentMethod ? "h-[80vh] overflow-y-scroll" : "h-[unset]"} min-h-[40vh] p-3`}>
+                    <div className={`w-[95%] 800px:w-[30%] bg-white shadow rounded ${ paymentMethod ? "h-[55vh] overflow-y-scroll" : "h-[unset]"} min-h-[40vh] p-3`}>
                         <div className="w-full flex justify-end">
                             <RxCross1 size={25} onClick={() => setOpen(false) || setPaymentMethod(false)} className="cursor-pointer"/>
                         </div>
@@ -120,35 +116,20 @@ const WithdrawMoney = () => {
                         {paymentMethod ? (
                             <div>
                                 <h3 className="text-[22px] font-Poppins text-center font-[600]">Add new Withdraw Method:</h3>
-                                <form onSubmit={handleSubmit}>
-                                    <div>
-                                        <label htmlFor='bankname'>Bank Name <span className="text-red-500">*</span></label>
-                                        <input type="text" name="" required value={bankInfo.bankName} onChange={(e) => setBankInfo({ ...bankInfo, bankName: e.target.value })} id="" placeholder="Enter your Bank name!" className={`${styles.input} mt-2`} />
+                                <form onSubmit={handleSubmit} className='mt-2'>
+                                    <div className="pt-2">
+                                        <label htmlFor='NetworkProvider'>Network Provider<span className="text-red-500">*</span></label>
+                                        <select type="text" name="" required value={networkProvider} onChange={(e) => setNetworkProvider(e.target.value)} id="" placeholder="Enter your bank Holder name!" className={`${styles.input} mt-2`}>
+                                            <option value="">Select</option>
+                                            <option value="MTN">MTN</option>
+                                            <option value="Vodafone">Vodafone</option>
+                                            <option value="AirtelTigo">AirtelTigo</option>
+                                        </select>
                                     </div>
 
                                     <div className="pt-2">
-                                        <label htmlFor='bankcountry'>Bank Country <span className="text-red-500">*</span></label>
-                                        <input type="text" name="" value={bankInfo.bankCountry} onChange={(e) => setBankInfo({ ...bankInfo, bankCountry: e.target.value, })} id="" required placeholder="Enter your bank Country!" className={`${styles.input} mt-2`} />
-                                    </div>
-
-                                    <div className="pt-2">
-                                        <label htmlFor='bankswift'> Bank Swift Code <span className="text-red-500">*</span> </label>
-                                        <input type="text" name="" id="" required value={bankInfo.bankSwiftCode} onChange={(e) => setBankInfo({ ...bankInfo, bankSwiftCode: e.target.value, }) } placeholder="Enter your Bank Swift Code!" className={`${styles.input} mt-2`}/>
-                                    </div>
-
-                                    <div className="pt-2">
-                                        <label htmlFor='BanKAccount'>Bank Account Number{" "}<span className="text-red-500">*</span></label>
-                                        <input type="number" name="" id="" value={bankInfo.bankAccountNumber} onChange={(e) => setBankInfo({...bankInfo, bankAccountNumber: e.target.value,})}required placeholder="Enter your bank account number!" className={`${styles.input} mt-2`}/>
-                                    </div>
-
-                                    <div className="pt-2">
-                                        <label htmlFor='Holdername'>Bank Holder Name <span className="text-red-500">*</span></label>
-                                        <input type="text" name="" required value={bankInfo.bankHolderName} onChange={(e) =>setBankInfo({...bankInfo,bankHolderName: e.target.value,})} id="" placeholder="Enter your bank Holder name!" className={`${styles.input} mt-2`}/>
-                                    </div>
-
-                                    <div className="pt-2">
-                                        <label htmlFor='bankAddress'>Bank Address <span className="text-red-500">*</span></label>
-                                        <input type="text" name="" required id="" value={bankInfo.bankAddress} onChange={(e) =>setBankInfo({...bankInfo,bankAddress: e.target.value,})} placeholder="Enter your bank address!" className={`${styles.input} mt-2`}/>
+                                        <label htmlFor='MMnumber'>Mobile Money Number{" "}<span className="text-red-500">*</span></label>
+                                        <input type="number" name="" id="" value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} required placeholder="Enter your Mobile Money Number!" className={`${styles.input} mt-2 px-2`}/>
                                     </div>
 
                                     <button type="submit" className={`${styles.button} mb-3 text-white`}>Add</button>
@@ -160,12 +141,12 @@ const WithdrawMoney = () => {
                                     Available Withdraw Methods:
                                 </h3>
 
-                                {seller && seller?.withdrawMethod ? (
+                                {seller && seller?.paystackRecipientCode ? (
                                     <div className='mt-4 px-3'>
                                         <div className="flex w-full justify-between items-center bg-slate-200 rounded p-2">
                                             <div className="">
-                                                <h5>Account Number:{" "}{"*".repeat(seller?.withdrawMethod.bankAccountNumber.length - 3) + seller?.withdrawMethod.bankAccountNumber.slice(-3)}</h5>
-                                                <h5>Bank Name: {seller?.withdrawMethod.bankName}</h5>
+                                                <h5>Network Provider: {seller?.withdrawMethod.networkProvider}</h5>
+                                                <h5>Mobile Money Number:{" "}{"*".repeat(seller?.withdrawMethod.mobileNumber.length - 3) + seller?.withdrawMethod.mobileNumber.slice(-3)}</h5>
                                             </div>
                                             <div className="">
                                                 <AiOutlineDelete size={25} className="cursor-pointer hover:text-red-500" onClick={() => deleteHandler()} title='Delete Withdrawal Method'/>
