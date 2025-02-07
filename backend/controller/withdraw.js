@@ -22,7 +22,7 @@ router.post( "/create-withdraw-request", isSeller, catchAsyncErrors(async (req, 
             await sendMail({
                 email: req.seller.email,
                 subject: "Withdraw Request",
-                message: `Hello ${req.seller.name}, Your withdraw request of ${amount}$ is been processed. It will take 3days to 7days to process! `,
+                message: `Hello ${req.seller.name}, Your withdraw request of GH₵ ${amount} is been processed.`,
             });
             res.status(201).json({
                 success: true,
@@ -71,7 +71,7 @@ router.put("/update-withdraw-request/:id", isAuthenticated, isAdmin("Admin"), ca
         const withdraw = await Withdraw.findByIdAndUpdate(
             req.params.id,
             {
-                status: "succeed",
+                status: "Approved",
                 updatedAt: Date.now(),
             },
             { new: true }
@@ -94,7 +94,7 @@ router.put("/update-withdraw-request/:id", isAuthenticated, isAdmin("Admin"), ca
             await sendMail({
                 email: seller.email,
                 subject: "Payment confirmation",
-                message: `Hello ${seller.name}, Your withdraw request of ${withdraw.amount}$ is on the way. Delivery time depends on your bank's rules it usually takes 3days to 7days.`,
+                message: `Hello ${seller.name}, Your withdraw request of GH₵ ${withdraw.amount} is on the way. Delivery time depends on your bank's rules it usually takes 3days to 7days.`,
             });
         } catch (error) {
             return next(new ErrorHandler(error.message, 500));
@@ -104,7 +104,7 @@ router.put("/update-withdraw-request/:id", isAuthenticated, isAdmin("Admin"), ca
             withdraw,
         });
     } catch (error) {
-    return next(new ErrorHandler(error.message, 500));
+        return next(new ErrorHandler(error.message, 500));
     }
 }));
 

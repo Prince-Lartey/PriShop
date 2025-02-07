@@ -92,6 +92,7 @@ const WithdrawMoney = () => {
             )
             .then((res) => {
                 toast.success("Withdraw money request is successful!");
+                setOpen(false)
             });
         }
     };
@@ -160,13 +161,13 @@ const WithdrawMoney = () => {
                                 </h3>
 
                                 {seller && seller?.withdrawMethod ? (
-                                    <div className=''>
-                                        <div className="800px:flex w-full justify-between items-center">
-                                            <div className="800px:w-[50%]">
+                                    <div className='mt-4 px-3'>
+                                        <div className="flex w-full justify-between items-center bg-slate-200 rounded p-2">
+                                            <div className="">
                                                 <h5>Account Number:{" "}{"*".repeat(seller?.withdrawMethod.bankAccountNumber.length - 3) + seller?.withdrawMethod.bankAccountNumber.slice(-3)}</h5>
                                                 <h5>Bank Name: {seller?.withdrawMethod.bankName}</h5>
                                             </div>
-                                            <div className="800px:w-[50%]">
+                                            <div className="">
                                                 <AiOutlineDelete size={25} className="cursor-pointer hover:text-red-500" onClick={() => deleteHandler()} title='Delete Withdrawal Method'/>
                                             </div>
                                         </div>

@@ -36,14 +36,14 @@ const AllSellers = () => {
         {
             field: "name",
             headerName: "Shop name",
-            minWidth: 150,
+            minWidth: 200,
             flex: 0.7,
         },
         {
             field: "email",
             headerName: "Email",
             type: "text",
-            minWidth: 150,
+            minWidth: 200,
             flex: 0.7,
         },
         {
@@ -56,7 +56,7 @@ const AllSellers = () => {
     
         {
             field: "joinedAt",
-            headerName: "joinedAt",
+            headerName: "Registration Date",
             type: "text",
             minWidth: 150,
             flex: 0.8,
@@ -130,8 +130,8 @@ const AllSellers = () => {
                                 Are you sure you want to delete this seller?
                             </h3>
                             <div className="w-full flex items-center justify-center">
-                                <div className={`${styles.button} text-white text-[18px] !h-[42px] mr-4`} onClick={() => setOpen(false)}>cancel</div>
-                                <div className={`${styles.button} text-white bg-red-500 text-[18px] !h-[42px] ml-4 `} onClick={() =>  setOpen(false) || handleDelete(userId)} >confirm</div>
+                                <div className={`${styles.button} text-white text-[18px] !h-[42px] mr-4`} onClick={() => setOpen(false)}>Cancel</div>
+                                <div className={`${styles.button} text-white bg-red-500 text-[18px] !h-[42px] ml-4 `} onClick={() =>  setOpen(false) || handleDelete(userId)} >Confirm</div>
                             </div>
                         </div>
                     </div>

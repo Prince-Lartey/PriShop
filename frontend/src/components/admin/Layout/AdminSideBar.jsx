@@ -70,7 +70,7 @@ const AdminSideBar = ({ active }) => {
                 <Link to="/admin-withdraw-request" className="w-full flex items-center" >
                     <CiMoneyBill size={30} color={`${active === 7 ? "blue" : "#555"}`}/>
                     <h5 className={`hidden 800px:block pl-2 text-[18px] font-[400] ${ active === 7 ? "text-[blue]" : "text-[#555]" }`}>
-                        Withdraw Request
+                        Withdraw Requests
                     </h5>
                 </Link>
             </div>
