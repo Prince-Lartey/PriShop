@@ -90,13 +90,13 @@ const Header = ({ activeHeading }) => {
                 </div>
             </div>
 
-            <div className={`${active === true ? "shadow-sm fixed top-0 left-0 z-10" : null} transition hidden 800px:flex items-center justify-between w-full bg-[#3321c8] h-[70px]`}>
+            <div className={`${active === true ? "shadow-sm fixed top-0 left-0 z-10" : null} transition hidden 800px:flex items-center justify-between w-full bg-[#4d4b5a] h-[70px]`}>
                 <div className={`${styles.section} relative ${styles.normalFlex} justify-between`}>
                     <div onClick={() => setDropDown(!dropDown)}>
-                        <div className="relative h-[60px] mt-[10px] w-[270px] hidden 1000px:block">
-                            <BiMenuAltLeft size={30} className="absolute top-3 left-2"/>
-                            <button className={`h-[100%] w-full flex justify-between items-center pl-10 bg-white font-sans text-lg font-[500] select-none rounded-t-md`}>All Categories</button>
-                            <IoIosArrowDown size={20} className="absolute right-2 top-4 cursor-pointer"onClick={() => setDropDown(!dropDown)}/>
+                        <div className="relative h-[70px] w-[270px] hidden 1000px:block">
+                            <BiMenuAltLeft size={30} className="absolute top-5 left-2"/>
+                            <button className={`h-[100%] w-full flex justify-between items-center pl-10 bg-white font-sans text-lg font-[500] select-none`}>All Categories</button>
+                            <IoIosArrowDown size={20} className="absolute right-2 top-6 cursor-pointer"onClick={() => setDropDown(!dropDown)}/>
                             {dropDown ? ( <DropDown categoriesData={categoriesData} setDropDown={setDropDown}/>) : null}
                         </div>
                     </div>
