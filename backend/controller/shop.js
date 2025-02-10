@@ -328,8 +328,8 @@ router.delete( "/delete-withdraw-method/", isSeller, catchAsyncErrors(async (req
             return next(new ErrorHandler("Seller not found with this id", 400));
         }
 
-        shop.paystackRecipientCode = undefined;
-        shop.withdrawMethod = undefined; // Clear withdraw method
+        seller.paystackRecipientCode = undefined;
+        seller.withdrawMethod = undefined; // Clear withdraw method
 
         await seller.save();
 

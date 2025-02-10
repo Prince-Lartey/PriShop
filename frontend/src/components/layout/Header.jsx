@@ -138,6 +138,17 @@ const Header = ({ activeHeading }) => {
                             </div>
                         </div>
 
+                        {isAuthenticated && user?.role === "Admin" && (
+                            <button className="">
+                                <Link to="/admin-dashboard">
+                                    <div className="text-[#fff] flex items-center text-sm">
+                                        Admin
+                                        <IoIosArrowForward className="ml-1" />
+                                    </div>
+                                </Link>
+                            </button>
+                        )}
+
                         {/* cart popup */}
                         {openCart ? <Cart setOpenCart={setOpenCart} /> : null}
 
