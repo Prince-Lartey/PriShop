@@ -9,38 +9,32 @@ import sendMail from "../utils/sendMail.js";
 import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
 import sendToken from "../utils/jwtToken.js";
 import { isAdmin, isAuthenticated } from "../middleware/auth.js"
+import { v2 as cloudinary } from 'cloudinary'
 
 const router = express.Router()
 
 // create user
-router.post("/create-user", upload.single("file"), async (req, res, next) => {  
+router.post("/create-user", async (req, res, next) => {  
 
     try {
-        const { name, email, password } = req.body;
+        const { name, email, password, avatar } = req.body;
         const userEmail = await User.findOne({ email });
 
         if (userEmail) {
-            const filename = req.file.filename
-            const filePath = `uploads/${filename}`
-            fs.unlink(filePath, (error) => {
-                if (error) {
-                    console.log(error)
-                    res.status(500).json({ message: "Error deleting file" })
-                }
-            })
-            
             return next(new ErrorHandler("User already exists", 400));
         }
 
-        const filename = req.file.filename
-        const fileUrl = path.join(filename)
+        const myCloud = await cloudinary.uploader.upload(avatar, {
+            folder: "avatars",
+        });
+
         const user = {
             name: name,
             email: email,
             password: password,
             avatar: {
-                url: fileUrl,
-                public_id: null
+                public_id: myCloud.public_id,
+                url: myCloud.secure_url,
             }
         }
 

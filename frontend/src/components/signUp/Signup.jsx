@@ -32,12 +32,12 @@ const Signup = () => {
                 formData.append("email", values.email);
                 formData.append("password", values.password);
                 if (values.avatar) {
-                    formData.append("file", values.avatar);
+                    formData.append("avatar", values.avatar);
                 }
 
                 // Send POST request
                 const res = await axios.post(`${server}/user/create-user`, formData, {
-                    headers: { "Content-Type": "multipart/form-data" },
+                    headers: { "Content-Type": "application/json" },
                 });
 
                 if (res.data.success === true) {
@@ -58,13 +58,18 @@ const Signup = () => {
     })
 
     // Handle file change for the avatar
-    const handleFileInputChange = (e) => {
+    const handleFileInputChange = async (e) => {
         const file = e.target.files[0];
         if (file) {
-            setFieldValue("avatar", file); // Update Formik field
-            setAvatarPreview(URL.createObjectURL(file)); // Set preview
+            const reader = new FileReader();
+            reader.readAsDataURL(file);  // Convert to Base64
+    
+            reader.onloadend = () => {
+                setFieldValue("avatar", reader.result);  // Save Base64 string to Formik
+                setAvatarPreview(reader.result);  // Show preview
+            };
         }
-    }
+    };
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-10 sm:px-6 lg:px-8">

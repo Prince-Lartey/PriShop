@@ -23,7 +23,7 @@ const Footer = () => {
                 <ul className="px-5 text-center sm:text-start flex sm:block flex-col items-center">
                     <img src={PriShopLogo} alt="" style={{ filter: "brightness(0) invert(1)" }} className="w-[150px]"/>
                     <br />
-                    <p>The home and elements needeed to create beatiful products.</p>
+                    <p>The home and elements needed to create beautiful products.</p>
                     <div className="flex items-center mt-[15px]">
                         <AiFillFacebook size={25} className="cursor-pointer" />
                         <AiOutlineTwitter size={25} style={{ marginLeft: "15px", cursor: "pointer" }} />
@@ -71,7 +71,7 @@ const Footer = () => {
                 <span>© 2024 PriShop. All rights reserved.</span>
                 <span>Terms · Privacy Policy</span>
                 <div className="sm:block flex items-center justify-center w-full">
-                    <img src="https://hamart-shop.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Ffooter-payment.a37c49ac.png&w=640&q=75" alt="" />
+                    <img src="https://paystack.shop/pay/assets/images/paystack-badge-cards-ghs.svg" alt="" className="h-[100px] w-[300px]  "/>
                 </div>
             </div>
         </div>

@@ -1,6 +1,7 @@
 import app from "./app.js"
 import dotenv from "dotenv"
 import connection from "./db/database.js";
+import { v2 as cloudinary } from 'cloudinary'
 
 const PORT = process.env.PORT || 8000
 
@@ -12,11 +13,17 @@ process.on("uncaughtException", (err) => {
 
 // config
 if (process.env.NODE_ENV !== "PRODUCTION") {
-    dotenv.config({ path: "backend/config/.env" });
+    dotenv.config({ path: "config/.env" });
 }
 
 // Connect to DB
 connection()
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+})
 
 // create server
 const server = app.listen(process.env.PORT, () => {
