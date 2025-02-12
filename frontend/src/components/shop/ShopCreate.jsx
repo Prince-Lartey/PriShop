@@ -35,9 +35,7 @@ const ShopCreate = () => {
                 formData.append("name", values.name);
                 formData.append("email", values.email);
                 formData.append("password", values.password);
-                if (values.avatar) {
-                    formData.append("file", values.avatar);
-                }
+                formData.append("avatar", values.avatar);
                 formData.append("zipCode", values.zipCode);
                 formData.append("address", values.address);
                 formData.append("phoneNumber", values.phoneNumber);
@@ -68,8 +66,12 @@ const ShopCreate = () => {
     const handleFileInputChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setFieldValue("avatar", file); // Update Formik field
-            setAvatarPreview(URL.createObjectURL(file)); // Set preview
+            setFieldValue("avatar", file); // Store the file in Formik
+            const reader = new FileReader();
+            reader.readAsDataURL(file); // Convert the file to a Base64 string for preview
+            reader.onloadend = () => {
+                setAvatarPreview(reader.result); // Update preview state
+            };
         }
     }
 

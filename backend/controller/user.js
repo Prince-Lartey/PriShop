@@ -207,26 +207,30 @@ router.put("/update-user-info", isAuthenticated, catchAsyncErrors(async (req, re
 }));
 
 // update user avatar
-router.put("/update-avatar", isAuthenticated, upload.single("image"), catchAsyncErrors(async (req, res, next) => {
+router.put("/update-avatar", isAuthenticated, upload.single("avatar"), catchAsyncErrors(async (req, res, next) => {
     try {
-        const existsUser = await User.findById(req.user.id);
+        let existsUser = await User.findById(req.user.id);
+        if (req.body.avatar !== "") {
+            const imageId = existsUser.avatar.public_id;
 
-        const existAvatarPath = `uploads/${existsUser.avatar}`
+            await cloudinary.uploader.destroy(imageId);
 
-        if (fs.existsSync(existAvatarPath)) {
-            fs.unlinkSync(existAvatarPath);
+            const myCloud = await cloudinary.uploader.upload(req.file.path, {
+                folder: "avatars",
+                width: 150,
+            });
+
+            existsUser.avatar = {
+                public_id: myCloud.public_id,
+                url: myCloud.secure_url,
+            };
         }
 
-        const fileUrl = req.file.filename
-
-        const user = await User.findByIdAndUpdate(req.user.id, {avatar: {
-            url: fileUrl,
-            public_id: null
-        }})
+        await existsUser.save();
 
         res.status(200).json({
             success: true,
-            user,
+            user: existsUser,
         });
     } catch (error) {
         return next(new ErrorHandler(error.message, 500));

@@ -50,7 +50,7 @@ const ProfileContent = ({ active }) => {
             setAvatar(file);
     
             const formData = new FormData();
-            formData.append("image", file);
+            formData.append("avatar", file);
     
             await axios.put(`${server}/user/update-avatar`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },
@@ -92,7 +92,7 @@ const ProfileContent = ({ active }) => {
 
                                 <div className=" w-[100%] 800px:w-[50%]">
                                     <label htmlFor="email" className="block pb-1">Email Address</label>
-                                    <input type="email" className={`${styles.input} !w-[95%] mb-4 800px:mb-0 px-2`} required value={email} onChange={(e) => setEmail(e.target.value)}/>
+                                    <input type="email" className={`${styles.input} !w-[95%] mb-4 800px:mb-0 px-2`} required value={email} onChange={(e) => setEmail(e.target.value)} readOnly/>
                                 </div>
                             </div>
 

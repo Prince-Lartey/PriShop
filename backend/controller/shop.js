@@ -9,50 +9,37 @@ import sendMail from "../utils/sendMail.js";
 import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
 import sendShopToken from "../utils/shopToken.js";
 import { isAdmin, isAuthenticated, isSeller } from "../middleware/auth.js";
+import { v2 as cloudinary } from 'cloudinary'
 
 const router = express.Router()
 
 // create shop
-router.post("/create-shop", upload.single("file"), async (req, res, next) => {
+router.post("/create-shop", upload.single("avatar"), async (req, res, next) => {
     try {
         const { name, email, phoneNumber } = req.body;
+        const avatarFile = req.file
 
         const sellerEmail = await Shop.findOne({ email });
         if (sellerEmail) {
-            const filename = req.file.filename
-            const filePath = `uploads/${filename}`
-            fs.unlink(filePath, (error) => {
-                if (error) {
-                    res.status(500).json({ message: "Error deleting file" })
-                }
-            })
-            
             return next(new ErrorHandler("Shop already exists", 400));
         }
 
-        const filename = req.file.filename
-        const fileUrl = path.join(filename)
+        // Check if avatar is provided
+        if (!avatarFile) {
+            return next(new ErrorHandler("Avatar is required", 400));
+        }
 
-        // Create subaccount on Paystack
-        // let subaccountCode;
-        // try {
-        //     const subaccountResponse = await createSubaccount({
-        //         name,
-        //         email,
-        //         phoneNumber,
-        //     });
-        //     subaccountCode = subaccountResponse.subaccount_code; // Extract subaccount code from Paystack response
-        // } catch (error) {
-        //     return next(new ErrorHandler("Error creating subaccount: " + error.message, 500));
-        // }
+        const myCloud = await cloudinary.uploader.upload(avatarFile.path, {
+            folder: "avatars",
+        });
 
         const seller = {
             name: name,
             email: email,
             password: req.body.password,
             avatar: {
-                url: fileUrl,
-                public_id: null
+                public_id: myCloud.public_id,
+                url: myCloud.secure_url,
             },
             address: req.body.address,
             phoneNumber: phoneNumber,
