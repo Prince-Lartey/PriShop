@@ -14,17 +14,23 @@ import { v2 as cloudinary } from 'cloudinary'
 const router = express.Router()
 
 // create user
-router.post("/create-user", async (req, res, next) => {  
+router.post("/create-user", upload.single("avatar"), async (req, res, next) => {  
 
     try {
-        const { name, email, password, avatar } = req.body;
+        const { name, email, password } = req.body;
+        const avatarFile = req.file
         const userEmail = await User.findOne({ email });
 
         if (userEmail) {
             return next(new ErrorHandler("User already exists", 400));
         }
 
-        const myCloud = await cloudinary.uploader.upload(avatar, {
+        // Check if avatar is provided
+        if (!avatarFile) {
+            return next(new ErrorHandler("Avatar is required", 400));
+        }
+
+        const myCloud = await cloudinary.uploader.upload(avatarFile.path, {
             folder: "avatars",
         });
 
@@ -99,7 +105,7 @@ router.post("/activation", catchAsyncErrors(async (req, res, next) => {
     } catch (error) {
         return next(new ErrorHandler(error.message, 500));
     }
-}))
+})) 
 
 // login user
 router.post("/login-user", catchAsyncErrors(async (req, res, next) => {

@@ -26,18 +26,24 @@ const Signup = () => {
         validationSchema: registerSchema,
         onSubmit: async (values, { setSubmitting, resetForm }) => {
             try {
+                if (!values.avatar) {
+                    toast.error("Please upload an avatar");
+                    setSubmitting(false);
+                    return;
+                }
+
                 // Prepare form data for submission
                 const formData = new FormData();
                 formData.append("name", values.fullName);
                 formData.append("email", values.email);
                 formData.append("password", values.password);
-                if (values.avatar) {
-                    formData.append("avatar", values.avatar);
-                }
+                formData.append("avatar", values.avatar);
 
                 // Send POST request
                 const res = await axios.post(`${server}/user/create-user`, formData, {
-                    headers: { "Content-Type": "application/json" },
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
                 });
 
                 if (res.data.success === true) {
@@ -58,18 +64,17 @@ const Signup = () => {
     })
 
     // Handle file change for the avatar
-    const handleFileInputChange = async (e) => {
+    const handleFileInputChange = (e) => {
         const file = e.target.files[0];
         if (file) {
+            setFieldValue("avatar", file); // Store the file in Formik
             const reader = new FileReader();
-            reader.readAsDataURL(file);  // Convert to Base64
-    
+            reader.readAsDataURL(file); // Convert the file to a Base64 string for preview
             reader.onloadend = () => {
-                setFieldValue("avatar", reader.result);  // Save Base64 string to Formik
-                setAvatarPreview(reader.result);  // Show preview
+                setAvatarPreview(reader.result); // Update preview state
             };
         }
-    };
+    }
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-10 sm:px-6 lg:px-8">

@@ -73,7 +73,7 @@ const ProfileContent = ({ active }) => {
                 <>
                     <div className="flex justify-center w-full">
                         <div className="relative">
-                            <img src={`${backend_url}${user?.avatar.url}`} alt="" className="w-[150px] h-[150px] rounded-full object-cover border-[3px] border-[#3ad132]"/>
+                            <img src={`${user?.avatar.url}`} alt="" className="w-[150px] h-[150px] rounded-full object-cover border-[3px] border-[#3ad132]"/>
                             <div className="w-[30px] h-[30px] bg-[#E3E9EE] rounded-full flex items-center justify-center cursor-pointer absolute bottom-[5px] right-[5px]">
                                 <input type="file" id="image" className="hidden" onChange={handleImage}/>
                                 <label htmlFor="image"><AiOutlineCamera /></label>
@@ -436,7 +436,6 @@ const ChangePassword = () => {
                         <label htmlFor="oldPassword" className="block pb-2">Enter your old password</label>
                         <div className="relative">
                             <input type={visible ? "text" : "password"} className={`${styles.input} !w-[95%] mb-4 800px:mb-0 px-2`} required value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} />
-                            {visible ? (<AiOutlineEye className="absolute right-8 top-1 cursor-pointer" size={25} onClick={() => setVisible(false)} />) : (<AiOutlineEyeInvisible className="absolute right-8 top-1 cursor-pointer" size={25} onClick={() => setVisible(true)}/>)}
                         </div>
                     </div>
 
@@ -444,7 +443,6 @@ const ChangePassword = () => {
                         <label htmlFor="newPassword" className="block pb-2">Enter your new password</label>
                         <div className="relative">
                             <input type={visible ? "text" : "password"} className={`${styles.input} !w-[95%] mb-4 800px:mb-0 px-2`} required value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
-                            {visible ? (<AiOutlineEye className="absolute right-8 top-1 cursor-pointer" size={25} onClick={() => setVisible(false)} />) : (<AiOutlineEyeInvisible className="absolute right-8 top-1 cursor-pointer" size={25} onClick={() => setVisible(true)}/>)}
                         </div>                    
                     </div>
 
@@ -452,7 +450,6 @@ const ChangePassword = () => {
                         <label htmlFor="confirmPassword" className="block pb-2">Confirm your new password</label>
                         <div className="relative">
                             <input type={visible ? "text" : "password"} className={`${styles.input} !w-[95%] mb-4 800px:mb-0 px-2`} required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
-                            {visible ? (<AiOutlineEye className="absolute right-8 top-1 cursor-pointer" size={25} onClick={() => setVisible(false)} />) : (<AiOutlineEyeInvisible className="absolute right-8 top-1 cursor-pointer" size={25} onClick={() => setVisible(true)}/>)}
                         </div>                        
                         
                         <button className={`w-[95%] h-[40px] border border-[#3a24db] bg-[#3a24db] text-center text-white rounded-[3px] mt-8 cursor-pointer flex items-center justify-center`} type="submit" disabled={isLoading}>

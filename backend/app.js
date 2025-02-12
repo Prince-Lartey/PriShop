@@ -25,8 +25,8 @@ app.use("/", express.static("uploads"))
 app.use("/test", (req, res) => {
     res.send("Hello world!");
 });
-app.use(express.urlencoded({ extended: true, limit: "50mb" }));
-app.use(express.json({ limit: "50mb" }))
+app.use(express.urlencoded({ extended: true, limit: "100mb" }));
+app.use(express.json({ limit: "100mb" }))
 
 if(process.env.NODE_ENV !== "PRODUCTION") {
     dotenv.config({ path: "backend/config/.env" });
