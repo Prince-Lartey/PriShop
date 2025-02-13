@@ -65,7 +65,7 @@ const Cart = ({ setOpenCart }) => {
                             <Link to="/checkout">
                                 <div className={`h-[45px] flex items-center justify-center w-[100%] bg-[#e44343] rounded-[5px]`} >
                                     <h1 className="text-[#fff] text-[18px] font-[600]">
-                                        Checkout Now (GH₵{totalPrice})
+                                        Checkout Now (GH₵ {totalPrice})
                                     </h1>
                                 </div>
                             </Link>
@@ -99,7 +99,7 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
 
     return (
         <div className="border-b p-4">
-            <div className="w-full flex items-center">
+            <div className="w-full flex items-center justify-between">
                 <div>
                     <div className={`bg-[#e44343] border border-[#e4434373] rounded-full w-[25px] h-[25px] ${styles.normalFlex} justify-center cursor-pointer`} onClick={() => increment(data)}>
                         <HiPlus size={18} color="#fff" />
@@ -112,7 +112,7 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
                     </div>
                 </div>
 
-                <img src={`${backend_url}${data?.images[0]}`} alt="" className="w-[100px] h-min ml-2 mr-2 rounded-[5px]"/>
+                <img src={`${data?.images[0].url}`} alt="" className="w-[100px] h-min ml-2 mr-2 rounded-[5px]"/>
 
                 <div className="pl-[5px]">
                     <h1>{data.name}</h1>
@@ -123,7 +123,7 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
                         GH₵{totalPrice}
                     </h4>
                 </div>
-                <RxCross1 className="cursor-pointer" onClick={() => removeFromCartHandler(data)}/>
+                <RxCross1 className="cursor-pointer " onClick={() => removeFromCartHandler(data)}/>
             </div>
         </div>
     )

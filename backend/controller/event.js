@@ -6,6 +6,7 @@ import ErrorHandler from "../utils/ErrorHandler.js";
 import upload from "../multer.js";
 import { isAdmin, isAuthenticated, isSeller } from "../middleware/auth.js";
 import fs from "fs"
+import { v2 as cloudinary } from 'cloudinary'
 
 const router = express.Router()
 
@@ -16,20 +17,34 @@ router.post("/create-event", upload.array("images"), catchAsyncErrors(async (req
             const shop = await Shop.findById(shopId);
             if (!shop) {
                 return next(new ErrorHandler("Shop Id is invalid!", 400));
-            } else {
-                const files = req.files
-                const imageUrls = files.map((file) => `${file.filename}`)
-                const eventData = req.body;
-                eventData.images = imageUrls;
-                eventData.shop = shop;
-    
-                const event = await Event.create(eventData);
+            }
+            // Ensure req.files exist
+            if (!req.files || req.files.length === 0) {
+                return next(new ErrorHandler("Product images are required!", 400));
+            }
         
-                res.status(201).json({
-                    success: true,
-                    event,
+            const imagesLinks = [];
+
+            for (const file of req.files) {
+                const result = await cloudinary.uploader.upload(file.path, {
+                    folder: "products",
+                });
+            
+                imagesLinks.push({
+                    public_id: result.public_id,
+                    url: result.secure_url,
                 });
             }
+
+            const eventData = { ...req.body, images: imagesLinks, shop };
+
+            const event = await Event.create(eventData);
+    
+            res.status(201).json({
+                success: true,
+                event,
+            });
+            
         } catch (error) {
             return next(new ErrorHandler(error, 400));
         }
