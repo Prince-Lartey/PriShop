@@ -63,7 +63,7 @@ router.get("/get-all-events/:id", catchAsyncErrors(async (req, res, next) => {
     }
 }));
 
-// delete product of a shop
+// delete event of a shop
 router.delete("/delete-shop-event/:id", isSeller, catchAsyncErrors(async (req, res, next) => {
     try {
         const eventId = req.params.id

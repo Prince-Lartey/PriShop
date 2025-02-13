@@ -112,11 +112,11 @@ const ProductDetails = ({data}) => {
                     <div className="w-full py-5">
                         <div className="block w-full 800px:flex">
                             <div className="w-full 800px:w-[50%]">
-                                <img src={`${backend_url}${data.images[select]}`} alt="" className="w-[70%]"/>
+                                <img src={`${data.images[select].url}`} alt="" className="w-[70%]"/>
                                 <div className='w-full flex'>
                                     {data && data.images.map((i, index) => (
                                         <div key={index} className={`${select === 0 ? "border" : "null"} cursor-pointer`}>
-                                            <img src={`${backend_url}${i}`} alt="" className="h-[120px] w-[120px] overflow-hidden mr-2 mt-2" onClick={() => setSelect(index)} />
+                                            <img src={`${i.url}`} alt="" className="h-[120px] w-[120px] overflow-hidden mr-2 mt-2" onClick={() => setSelect(index)} />
                                         </div>
                                     ))}
                                 </div>
@@ -173,7 +173,7 @@ const ProductDetails = ({data}) => {
 
                                 <div className="flex items-center pt-8">
                                     <Link to={`/shop/preview/${data.shop._id}`}>
-                                        <img src={`${backend_url}${data.shop.avatar?.url}`} alt="" className="w-[50px] h-[50px] rounded-full mr-2" />
+                                        <img src={`${data.shop.avatar?.url}`} alt="" className="w-[50px] h-[50px] rounded-full mr-2" />
                                     </Link>
                                     <div className="pr-8">
                                         <Link to={`/shop/preview/${data.shop._id}`}>
@@ -270,7 +270,7 @@ const ProductDetailsInfo = ({data, products, totalReviewsLength, averageRating})
                     <div className="w-full 800px:w-[50%]">
                         <Link to={`/shop/preview/${data.shop._id}`}>
                             <div className="flex items-center">
-                                <img src={`${backend_url}${data.shop.avatar?.url}`} alt="" className="w-[50px] h-[50px] rounded-full" />
+                                <img src={`${data.shop.avatar?.url}`} alt="" className="w-[50px] h-[50px] rounded-full" />
                                 <div className="pl-3">
                                     <h3 className={`${styles.shop_name}`}>{data.shop.name}</h3>
                                     <h5 className="pb-2 text-[15px]">

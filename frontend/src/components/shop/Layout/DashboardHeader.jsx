@@ -5,7 +5,6 @@ import { AiOutlineGift } from "react-icons/ai";
 import { MdOutlineLocalOffer } from "react-icons/md";
 import { BiMessageSquareDetail } from "react-icons/bi";
 import { FiPackage, FiShoppingBag } from "react-icons/fi";
-import { backend_url } from "../../../server";
 
 const DashboardHeader = () => {
     const { seller } = useSelector((state) => state.seller);
@@ -35,7 +34,7 @@ const DashboardHeader = () => {
                         <BiMessageSquareDetail color="#555" size={30} className="mx-5 cursor-pointer" title="Messages"/>
                     </Link>
                     <Link to={`/shop/${seller._id}`}>
-                        <img src={`${backend_url}${seller.avatar?.url}`} alt="" className="w-[50px] h-[50px] rounded-full object-cover"/>
+                        <img src={`${seller.avatar?.url}`} alt="" className="w-[50px] h-[50px] rounded-full object-cover"/>
                     </Link>
                 </div>
             </div>

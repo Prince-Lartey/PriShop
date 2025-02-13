@@ -185,29 +185,32 @@ router.get( "/get-shop-info/:id", catchAsyncErrors(async (req, res, next) => {
 }));
 
 // update shop profile picture
-router.put( "/update-shop-avatar", isSeller, upload.single("image"), catchAsyncErrors(async (req, res, next) => {
+router.put( "/update-shop-avatar", isSeller, upload.single("avatar"), catchAsyncErrors(async (req, res, next) => {
     try {
         let existsSeller = await Shop.findById(req.seller._id);
     
-            const existAvatarPath = `uploads/${existsSeller.avatar}`
+        if (req.body.avatar !== "") {
+            const imageId = existsSeller.avatar.public_id;
 
-            if (fs.existsSync(existAvatarPath)) {
-                fs.unlinkSync(existAvatarPath);
-            }
+            await cloudinary.uploader.destroy(imageId);
 
-            const fileUrl = req.file.filename
-
-            const seller = await Shop.findByIdAndUpdate(req.seller._id, {avatar: {
-                url: fileUrl,
-                public_id: null
-            }})
-        
-            await existsSeller.save();
-    
-            res.status(200).json({
-                success: true,
-                seller,
+            const myCloud = await cloudinary.uploader.upload(req.file.path, {
+                folder: "avatars",
+                width: 150,
             });
+
+            existsSeller.avatar = {
+                public_id: myCloud.public_id,
+                url: myCloud.secure_url,
+            };
+        }
+        
+        await existsSeller.save();
+
+        res.status(200).json({
+            success: true,
+            seller: existsSeller,
+        });
     } catch (error) {
         return next(new ErrorHandler(error.message, 500));
     }
