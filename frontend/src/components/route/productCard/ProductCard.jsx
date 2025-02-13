@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import styles from "../../../styles/styles.js";
 import { AiFillHeart, AiOutlineEye, AiOutlineHeart, AiOutlineShoppingCart, } from "react-icons/ai";
 import ProductDetailsCard from "../ProductDetailsCard/ProductDetailsCard"
-import { backend_url } from "../../../server.js";
 import { useDispatch, useSelector } from "react-redux";
 import { addTocart } from "../../../redux/actions/cart.js";
 import { toast } from "react-toastify";
@@ -83,8 +82,8 @@ const ProductCard = ({ data, isEvent }) => {
                             {data.originalPrice ? "₵ " + data.originalPrice : null}
                         </h4>
                     </div>
-                    <span className="font-[500] text-[15px] text-[#68d284]">
-                        {data?.sold_out} sold
+                    <span className={`font-[500] text-[15px] ${data.stock === 0 ? "text-red-500" : "text-[#68d284]"}`}>
+                        {data.stock === 0 ? "Sold Out" : `${data?.sold_out} sold`}
                     </span>
                 </div>
             </Link>
@@ -112,10 +111,12 @@ const ProductCard = ({ data, isEvent }) => {
                 />
                 <AiOutlineShoppingCart
                     size={25}
-                    className="cursor-pointer absolute right-2 top-24"
-                    onClick={() => addToCartHandler(data._id)}
-                    color="#444"
-                    title="Add to cart"
+                    className={`cursor-pointer absolute right-2 top-24 ${
+                        data.stock === 0 ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
+                    onClick={() => data.stock > 0 && addToCartHandler(data._id)}
+                    color={data.stock === 0 ? "#999" : "#444"}
+                    title={data.stock === 0 ? "Out of stock" : "Add to cart"}
                 />
                 {open ? <ProductDetailsCard setOpen={setOpen} data={data} /> : null}
             </div>

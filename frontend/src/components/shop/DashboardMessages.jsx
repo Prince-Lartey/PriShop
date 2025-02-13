@@ -243,7 +243,7 @@ const MessageList = ({ data, index, setOpen, setCurrentChat, me, setUserData, on
     return (
         <div className={`w-full flex p-3 px-3 ${ active === index ? "bg-[#00000010]" : "bg-transparent" }  cursor-pointer`} onClick={(e) => setActive(index) || handleClick(data._id) || setCurrentChat(data) || setUserData(user) || setActiveStatus(online)}>
             <div className="relative">
-                <img src={`${backend_url}${user?.avatar?.url}`} alt="" className="w-[50px] h-[50px] rounded-full"/>
+                <img src={`${user?.avatar?.url}`} alt="" className="w-[50px] h-[50px] rounded-full"/>
                 {online ? (
                     <div className="w-[12px] h-[12px] bg-green-400 rounded-full absolute top-[2px] right-[2px]" />
                 ) : (
@@ -269,7 +269,7 @@ const SellerInbox = ({ setOpen, scrollRef, newMessage, setNewMessage, sendMessag
         <div className="w-full min-h-full flex flex-col justify-between">
             <div className="w-full flex p-3 items-center justify-between bg-slate-200">
                 <div className="flex">
-                    <img src={`${backend_url}${userData?.avatar?.url}`} alt="" className="w-[60px] h-[60px] rounded-full" />
+                    <img src={`${userData?.avatar?.url}`} alt="" className="w-[60px] h-[60px] rounded-full" />
                     <div className="pl-3">
                         <h1 className="text-[18px] font-[600]">{userData?.name}</h1>
                         <h1>{activeStatus ? "Active Now" : ""}</h1>
@@ -284,7 +284,7 @@ const SellerInbox = ({ setOpen, scrollRef, newMessage, setNewMessage, sendMessag
                     return (
                         <div className={`flex w-full my-2 ${ item.sender === sellerId ? "justify-end" : "justify-start"}`} ref={scrollRef} key={index}>
                             {item.sender !== sellerId && (
-                                <img src={`${backend_url}${userData?.avatar?.url}`} className="w-[40px] h-[40px] rounded-full mr-3" alt=""/>
+                                <img src={`${userData?.avatar?.url}`} className="w-[40px] h-[40px] rounded-full mr-3" alt=""/>
                             )}
                             {item.images && (
                                 <img src={item.images.startsWith("data:image") ? item.images : `${backend_url}${item.images}`} alt="" className="w-[300px] h-[300px] object-cover rounded-[10px] mr-2"/>

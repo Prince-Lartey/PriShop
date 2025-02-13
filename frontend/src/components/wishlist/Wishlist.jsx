@@ -1,15 +1,12 @@
 import { RxCross1 } from "react-icons/rx"
 import styles from "../../styles/styles"
-import { IoBagHandleOutline } from "react-icons/io5";
 import { useState } from "react";
-import shoe from "../../assets/bestdeal/shoe.jpg"
 import { Link } from "react-router-dom";
 import { BsCartPlus } from "react-icons/bs"
 import { AiOutlineHeart } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { removeFromWishlist } from "../../redux/actions/wishlist";
 import { addTocart } from "../../redux/actions/cart";
-import { backend_url } from "../../server";
 import { toast } from "react-toastify";
 
 const WishList = ({ setOpenWishlist }) => {
@@ -23,6 +20,7 @@ const WishList = ({ setOpenWishlist }) => {
     const addToCartHandler = (data) => {
         const newData = {...data, qty:1};
         dispatch(addTocart(newData));
+        dispatch(removeFromWishlist(data))
         toast.success("Item added to cart successfully!")
         setOpenWishlist(false);
     }
@@ -88,7 +86,7 @@ const CartSingle = ({ data, removeFromWishlistHandler, addToCartHandler }) => {
                     </h4>
                 </div>
                 <div>
-                    <BsCartPlus size={20} className="cursor-pointer" title="Add to cart" onClick={() => addToCartHandler(data)}/>
+                    <BsCartPlus size={20} className={`cursor-pointer ${data.stock === 0 ? "opacity-50 cursor-not-allowed" : ""}`} title={data.stock === 0 ? "Out of stock" : "Add to cart"} onClick={() => addToCartHandler(data)}/>
                 </div>
             </div>
         </div>

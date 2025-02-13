@@ -92,19 +92,24 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                                         Send Message <AiOutlineMessage className="ml-1" />
                                     </span>
                                 </div>
-
-                                <h5 className="text-[16px] text-[red] mt-5">({data.sold_out}) Sold out</h5>
                             </div>
 
                             <div className="w-full 800px:w-[50%] pt-5 pl-[5px] pr-[5px]">
                                 <h1 className={`${styles.productTitle} text-[20px] mb-2`}>{data.name}</h1>
                                 <p>{data.description}</p>
 
-                                <div className="flex pt-3">
-                                    <h4 className={`${styles.productDiscountPrice}`}>₵ {data.discountPrice}</h4>
-                                    <h3 className={`${styles.price}`}>
-                                        {data.originalPrice ? "₵ " + data.originalPrice : null}
-                                    </h3>
+                                <div className="flex justify-between">
+                                    <div className='flex pt-3'>
+                                        <h4 className={`${styles.productDiscountPrice}`}>
+                                            GH₵ {data.discountPrice}
+                                        </h4>
+                                        <h3 className={`${styles.price}`}>
+                                            {data.originalPrice ? "₵ " + data.originalPrice : null}
+                                        </h3>
+                                    </div>
+                                    <span className={`pt-3 font-[500] text-[20px] ${data.stock === 0 ? "text-red-500" : "text-[#68d284]"}`}>
+                                        {data.stock === 0 ? "Sold Out" : `${data?.sold_out} sold`}
+                                    </span>
                                 </div>
 
                                 <div className="flex items-center mt-12 justify-between pr-3">
@@ -138,7 +143,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                                     </div>
                                 </div>
 
-                                <div className={`${styles.button} mt-6 rounded-[4px] h-11 flex items-center`} onClick={() => addToCartHandler(data._id)}>
+                                <div className={`${styles.button} !mt-6 !rounded-[4px] !h-11 flex items-center ${data.stock === 0 ? "opacity-50 cursor-not-allowed" : ""}`} onClick={() => data.stock > 0 && addToCartHandler(data._id)}>
                                     <span className="text-[#fff] flex items-center">
                                         Add to cart <AiOutlineShoppingCart className="ml-1" />
                                     </span>
