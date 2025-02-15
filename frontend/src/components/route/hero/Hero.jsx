@@ -9,7 +9,7 @@ const Hero = () => {
                     Best Collection for <br /> All Products
                 </h1>
                 <p className="pt-5 text-[16px] font-[Poppins] font-[400] text-[#000000ba]">
-                Discover the best collection for all products, carefully curated to meet your needs. From high-quality electronics and trendy fashion  to home essentials and more, we offer a diverse range of top-rated items. Shop with confidence and find everything you need in one place! 
+                    Discover the best collection for all products, carefully curated to meet your needs. <br />From high-quality electronics and trendy fashion  to home essentials and more,<br /> we offer a diverse range of top-rated items. Shop with confidence and find <br />everything you need in one place! 
                 </p>
                 <Link to="/products" className="inline-block">
                     <div className={`${styles.button} mt-5`}>

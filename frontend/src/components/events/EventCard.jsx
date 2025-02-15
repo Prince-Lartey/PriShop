@@ -5,6 +5,7 @@ import CountDown from "./CountDown.jsx"
 import { useDispatch, useSelector } from "react-redux"
 import { toast } from "react-toastify"
 import { addTocart } from "../../redux/actions/cart.js"
+import { AiOutlineShoppingCart } from "react-icons/ai"
 
 const EventCard = ({ active, data }) => {
     const { cart } = useSelector((state) => state.cart);
@@ -40,14 +41,14 @@ const EventCard = ({ active, data }) => {
                 <div className="flex py-2 justify-between">
                     <div className="flex">
                         <h5 className="font-bold text-[20px] text-[#333] pr-3 font-Roboto">
-                            ₵ {data.discountPrice}
+                            GH₵ {data.discountPrice}
                         </h5>
                         <h5 className="font-[500] text-[18px] text-[#d55b45] line-through">
-                            GH₵ {data.originalPrice}
+                            ₵ {data.originalPrice}
                         </h5>
                     </div>
-                    <span className="pr-3 font-[400] text-[17px] text-[#44a55e]">
-                        {data.sold_out} Sold
+                    <span className={`font-[500] text-[20px] ${data.stock === 0 ? "text-red-500" : "text-[#68d284]"}`}>
+                        {data.stock === 0 ? "Sold Out" : `${data?.sold_out} sold`}
                     </span>
                 </div>
                 <CountDown data={data}/>
@@ -57,7 +58,7 @@ const EventCard = ({ active, data }) => {
                     <Link to={`/product/${data._id}?isEvent=true`}>
                         <div className={`${styles.button} text-[#fff]`}>See Details</div>
                     </Link>
-                    <div className={`${styles.button} text-[#fff] ml-5`} onClick={() => addToCartHandler(data)}>Add to cart</div>
+                    <div className={`${styles.button} text-[#fff] ml-5 ${data.stock === 0 ? "opacity-50 cursor-not-allowed" : ""}`} onClick={() => addToCartHandler(data)}>Add to cart <AiOutlineShoppingCart className="ml-1" /></div>
                 </div>
             </div>
         </div>

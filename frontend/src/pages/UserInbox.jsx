@@ -3,7 +3,7 @@ import Header from "../components/layout/Header";
 import { useSelector } from "react-redux";
 import socketIO from "socket.io-client";
 import { format } from "timeago.js";
-import { backend_url, server } from "../server";
+import { server } from "../server";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowRight, AiOutlineSend } from "react-icons/ai";
@@ -26,7 +26,9 @@ const UserInbox = () => {
     const [images, setImages] = useState();
     const [activeStatus, setActiveStatus] = useState(false);
     const [open, setOpen] = useState(false);
+    const [unreadCounts, setUnreadCounts] = useState({});
     const scrollRef = useRef(null);
+    
 
     useEffect(() => {
         socketId.on("getMessage", (data) => {
@@ -51,12 +53,43 @@ const UserInbox = () => {
             });
 
             setConversations(resonse.data.conversations);
+            resonse.data.conversations.forEach((conversation) => {
+                getUnreadCount(conversation._id);
+            });
         } catch (error) {
             // console.log(error);
         }
         };
         getConversation();
     }, [user, messages]);
+
+    const getUnreadCount = async (conversationId) => {
+        try {
+            const response = await axios.get(`${server}/message/get-all-messages/${conversationId}`);
+            const unreadMessages = response.data.messages.filter((message) => !message.seen && message.sender !== user._id);
+            setUnreadCounts((prev) => ({ ...prev, [conversationId]: unreadMessages.length }));
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const markMessagesAsSeen = async (conversationId) => {
+        try {
+            await axios.put(`${server}/message/mark-messages-as-seen/${conversationId}`, {
+                userId: user._id,
+            });
+            setUnreadCounts((prev) => ({ ...prev, [conversationId]: 0 }));
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleConversationClick = (conversationId) => {
+        setCurrentChat(conversations.find((conversation) => conversation._id === conversationId));
+        setOpen(true);
+        markMessagesAsSeen(conversationId);
+    };
+
 
     useEffect(() => {
         if (user) {
@@ -208,7 +241,8 @@ const UserInbox = () => {
 
                     {/* All messages list */}
                     {conversations && conversations.map((item, index) => (
-                        <MessageList data={item} key={index} index={index} setOpen={setOpen} setCurrentChat={setCurrentChat} me={user?._id} setUserData={setUserData} userData={userData} online={onlineCheck(item)} setActiveStatus={setActiveStatus} loading={loading}/>
+                        <MessageList data={item} key={index} index={index} setOpen={setOpen} setCurrentChat={setCurrentChat} me={user?._id} setUserData={setUserData} userData={userData} online={onlineCheck(item)} setActiveStatus={setActiveStatus} loading={loading} unreadCount={unreadCounts[item._id] || 0}
+                        handleConversationClick={handleConversationClick}/>
                     ))}
                 </>
             )}
@@ -220,7 +254,7 @@ const UserInbox = () => {
     );
 };
 
-const MessageList = ({ data, index, setOpen, setCurrentChat, me, setUserData, userData, online, setActiveStatus, loading}) => {
+const MessageList = ({ data, index, setOpen, setCurrentChat, me, setUserData, userData, online, setActiveStatus, loading, unreadCount, handleConversationClick }) => {
 
     const [active, setActive] = useState(0);
     const [user, setUser] = useState([]);
@@ -245,23 +279,34 @@ const MessageList = ({ data, index, setOpen, setCurrentChat, me, setUserData, us
     }, [me, data]);
 
     return (
-        <div className={`w-full flex p-3 px-3 ${ active === index ? "bg-[#00000010]" : "bg-transparent"}  cursor-pointer`} onClick={(e) => setActive(index) || handleClick(data._id) || setCurrentChat(data) || setUserData(user) || setActiveStatus(online)}>
-            <div className="relative">
-                <img src={`${user?.avatar?.url}`} alt="" className="w-[50px] h-[50px] rounded-full" />
-                {online ? (
-                    <div className="w-[12px] h-[12px] bg-green-400 rounded-full absolute top-[2px] right-[2px]" />
-                ) : (
-                    <div className="w-[12px] h-[12px] bg-[#c7b9b9] rounded-full absolute top-[2px] right-[2px]" />
-                )}
+        <div className={`w-full flex justify-between p-3 px-3 ${ active === index ? "bg-[#00000010]" : "bg-transparent"}  cursor-pointer`} onClick={(e) => setActive(index) || handleConversationClick(data._id) || setCurrentChat(data) || setUserData(user) || setActiveStatus(online)}>
+            <div className="flex">
+                <div className="relative">
+                    <img src={`${user?.avatar?.url}`} alt="" className="w-[50px] h-[50px] rounded-full" />
+                    {online ? (
+                        <div className="w-[12px] h-[12px] bg-green-400 rounded-full absolute top-[2px] right-[2px]" />
+                    ) : (
+                        <div className="w-[12px] h-[12px] bg-[#c7b9b9] rounded-full absolute top-[2px] right-[2px]" />
+                    )}
+                </div>
+
+                <div className="pl-3">
+                    <h1 className="text-[18px]">{user?.name}</h1>
+                    <p className="text-[16px] text-[#000c]">
+                        {!loading && data?.lastMessageId !== userData?._id
+                            ? "You:"
+                            : userData?.name.split(" ")[0] + ": "}{" "}
+                        {data?.lastMessage}
+                    </p>
+                </div>
             </div>
-            <div className="pl-3">
-                <h1 className="text-[18px]">{user?.name}</h1>
-                <p className="text-[16px] text-[#000c]">
-                    {!loading && data?.lastMessageId !== userData?._id
-                        ? "You:"
-                        : userData?.name.split(" ")[0] + ": "}{" "}
-                    {data?.lastMessage}
-                </p>
+
+            <div className="mr-10 mt-3">
+                {unreadCount > 0 && (
+                    <div className="w-[30px] h-[30px] bg-red-500 rounded-full absolute flex items-center justify-center text-white font-semibold text-[17px]">
+                        {unreadCount}
+                    </div>
+                )}
             </div>
         </div>
     );

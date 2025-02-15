@@ -56,4 +56,24 @@ router.get( "/get-all-messages/:id", catchAsyncErrors(async (req, res, next) => 
     }
 }));
 
-export default router
+// mark messages as seen
+router.put("/mark-messages-as-seen/:conversationId", catchAsyncErrors(async (req, res, next) => {
+    try {
+        const { conversationId } = req.params;
+        const { userId } = req.body;
+
+        await Messages.updateMany(
+            { conversationId, sender: { $ne: userId }, seen: false },
+            { $set: { seen: true } }
+        );
+
+        res.status(200).json({
+            success: true,
+            message: "Messages marked as seen",
+        });
+    } catch (error) {
+        return next(new ErrorHandler(error.message), 500);
+    }
+}));
+
+export default router 
