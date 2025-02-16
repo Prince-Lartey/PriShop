@@ -5,7 +5,7 @@ import { useState } from "react";
 import { categoriesData } from "../../static/data.jsx";
 import { AiOutlineHeart, AiOutlineSearch, AiOutlineShoppingCart } from "react-icons/ai";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io"
-import { BiMenuAltLeft } from "react-icons/bi"
+import { BiMenuAltLeft, BiMessageSquareDetail } from "react-icons/bi"
 import { CgProfile } from "react-icons/cg";
 import DropDown from "./DropDown.jsx"
 import Navbar from "./Navbar.jsx"
@@ -14,6 +14,9 @@ import { backend_url } from "../../server.js";
 import Cart from "../cart/Cart";
 import Wishlist from "../wishlist/Wishlist"
 import { RxCross1 } from "react-icons/rx";
+import { server } from "../../server";
+import { useEffect } from "react"
+import axios from "axios";
 
 const Header = ({ activeHeading }) => {
     const { isAuthenticated, user } = useSelector((state) => state.user);
@@ -28,6 +31,7 @@ const Header = ({ activeHeading }) => {
     const [openCart, setOpenCart] = useState(false);
     const [openWishlist, setOpenWishlist] = useState(false);
     const [open, setOpen] = useState(false)
+    const [totalUnread, setTotalUnread] = useState(0);
 
     const handleSearchChange = (e) => {
         const term = e.target.value;
@@ -38,6 +42,21 @@ const Header = ({ activeHeading }) => {
         );
         setSearchData(filteredProducts);
     };
+
+    useEffect(() => {
+        const fetchTotalUnreadMessages = async () => {
+            try {
+                const response = await axios.get(`${server}/message/get-total-unread-messages/${user._id}`);
+                setTotalUnread(response.data.totalUnread);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        if (user) {
+            fetchTotalUnreadMessages();
+        }
+    }, [user]);
 
     window.addEventListener("scroll", () => {
         if (window.scrollY > 70) {
@@ -106,6 +125,17 @@ const Header = ({ activeHeading }) => {
                     </div>
 
                     <div className="flex">
+                        <Link to="/inbox" className={`${styles.normalFlex}`}>
+                            <div className="relative cursor-pointer mr-[15px]" >
+                                <BiMessageSquareDetail size={30} color="rgb(255 255 255 / 83"/>
+                                {totalUnread > 0 && (
+                                    <span className="absolute right-0 top-0 rounded-full bg-red-500 w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
+                                        {totalUnread}
+                                    </span>
+                                )}
+                            </div>
+                        </Link>
+
                         <div className={`${styles.normalFlex}`}>
                             <div className="relative cursor-pointer mr-[15px]" onClick={() => setOpenWishlist(true)}>
                                 <AiOutlineHeart size={30} color="rgb(255 255 255 / 83"/>

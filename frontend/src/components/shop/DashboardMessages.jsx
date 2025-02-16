@@ -24,6 +24,7 @@ const DashboardMessages = () => {
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [activeStatus, setActiveStatus] = useState(false);
     const [images, setImages] = useState();
+    const [unreadCounts, setUnreadCounts] = useState({});
     const scrollRef = useRef(null);
 
     useEffect(() => {
@@ -49,12 +50,42 @@ const DashboardMessages = () => {
                 });
         
                 setConversations(response.data.conversations);
+                response.data.conversations.forEach((conversation) => {
+                    getUnreadCount(conversation._id);
+                });
             } catch (error) {
                 // console.log(error);
             }
         };
         getConversation();
     }, [seller, messages]);
+
+    const getUnreadCount = async (conversationId) => {
+        try {
+            const response = await axios.get(`${server}/message/get-all-messages/${conversationId}`);
+            const unreadMessages = response.data.messages.filter((message) => !message.seen && message.sender !== seller._id);
+            setUnreadCounts((prev) => ({ ...prev, [conversationId]: unreadMessages.length }));
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const markMessagesAsSeen = async (conversationId) => {
+        try {
+            await axios.put(`${server}/message/mark-messages-as-seen/${conversationId}`, {
+                userId: seller._id,
+            });
+            setUnreadCounts((prev) => ({ ...prev, [conversationId]: 0 }));
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleConversationClick = (conversationId) => {
+        setCurrentChat(conversations.find((conversation) => conversation._id === conversationId));
+        setOpen(true);
+        markMessagesAsSeen(conversationId);
+    };
 
     useEffect(() => {
         if (seller) {
@@ -202,7 +233,8 @@ const DashboardMessages = () => {
                     <h1 className="text-center text-[30px] py-3 font-Poppins">All Messages</h1>
 
                     {conversations && conversations.map((item, index) => (
-                        <MessageList data={item} key={index} index={index} setOpen={setOpen} setCurrentChat={setCurrentChat} me={seller._id} setUserData={setUserData} userData={userData} online={onlineCheck(item)} setActiveStatus={setActiveStatus} isLoading={isLoading}/>
+                        <MessageList data={item} key={index} index={index} setOpen={setOpen} setCurrentChat={setCurrentChat} me={seller._id} setUserData={setUserData} userData={userData} online={onlineCheck(item)} setActiveStatus={setActiveStatus} isLoading={isLoading} unreadCount={unreadCounts[item._id] || 0}
+                        handleConversationClick={handleConversationClick}/>
                     ))}
                 </>
             )}
@@ -215,7 +247,7 @@ const DashboardMessages = () => {
     )
 }
 
-const MessageList = ({ data, index, setOpen, setCurrentChat, me, setUserData, online, setActiveStatus, isLoading}) => {
+const MessageList = ({ data, index, setOpen, setCurrentChat, me, setUserData, online, setActiveStatus, isLoading, unreadCount, handleConversationClick}) => {
     const [user, setUser] = useState([]);
     const navigate = useNavigate();
 
@@ -241,23 +273,34 @@ const MessageList = ({ data, index, setOpen, setCurrentChat, me, setUserData, on
     }, [me, data]);
 
     return (
-        <div className={`w-full flex p-3 px-3 ${ active === index ? "bg-[#00000010]" : "bg-transparent" }  cursor-pointer`} onClick={(e) => setActive(index) || handleClick(data._id) || setCurrentChat(data) || setUserData(user) || setActiveStatus(online)}>
-            <div className="relative">
-                <img src={`${user?.avatar?.url}`} alt="" className="w-[50px] h-[50px] rounded-full"/>
-                {online ? (
-                    <div className="w-[12px] h-[12px] bg-green-400 rounded-full absolute top-[2px] right-[2px]" />
-                ) : (
-                    <div className="w-[12px] h-[12px] bg-[#f35656] rounded-full absolute top-[2px] right-[2px]" />
-                )}
+        <div className={`w-full flex justify-between p-3 px-3 ${ active === index ? "bg-[#00000010]" : "bg-transparent" }  cursor-pointer`} onClick={(e) => setActive(index) || handleConversationClick(data._id) || setCurrentChat(data) || setUserData(user) || setActiveStatus(online)}>
+            <div className="flex">
+                <div className="relative">
+                    <img src={`${user?.avatar?.url}`} alt="" className="w-[50px] h-[50px] rounded-full"/>
+                    {online ? (
+                        <div className="w-[12px] h-[12px] bg-green-400 rounded-full absolute top-[2px] right-[2px]" />
+                    ) : (
+                        <div className="w-[12px] h-[12px] bg-[#f35656] rounded-full absolute top-[2px] right-[2px]" />
+                    )}
+                </div>
+
+                <div className="pl-3">
+                    <h1 className="text-[18px]">{user?.name}</h1>
+                    <p className="text-[16px] text-[#000c]">
+                        {!isLoading && data?.lastMessageId !== user?._id
+                            ? "You:"
+                            : user?.name.split(" ")[0] + ": "}{" "}
+                        {data?.lastMessage}
+                    </p>
+                </div>
             </div>
-            <div className="pl-3">
-                <h1 className="text-[18px]">{user?.name}</h1>
-                <p className="text-[16px] text-[#000c]">
-                    {!isLoading && data?.lastMessageId !== user?._id
-                        ? "You:"
-                        : user?.name.split(" ")[0] + ": "}{" "}
-                    {data?.lastMessage}
-                </p>
+
+            <div className="mr-10 mt-3">
+                {unreadCount > 0 && (
+                    <div className="w-[30px] h-[30px] bg-red-500 rounded-full absolute flex items-center justify-center text-white font-semibold text-[17px]">
+                        {unreadCount}
+                    </div>
+                )}
             </div>
         </div>
     )

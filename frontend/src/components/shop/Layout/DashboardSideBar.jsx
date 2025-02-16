@@ -7,8 +7,30 @@ import { CiMoneyBill, CiSettings } from "react-icons/ci";
 import { Link } from "react-router-dom"
 import { BiMessageSquareDetail } from "react-icons/bi"
 import { HiOutlineReceiptRefund } from "react-icons/hi"
+import { useSelector } from "react-redux"
+import { useEffect, useState } from "react"
+import axios from "axios"
+import { server } from "../../../server"
 
 const DashboardSideBar = ({ active }) => {
+    const { seller } = useSelector((state) => state.seller);
+    const [totalUnread, setTotalUnread] = useState(0);
+
+    useEffect(() => {
+        const fetchTotalUnreadMessages = async () => {
+            try {
+                const response = await axios.get(`${server}/message/get-total-unread-messages/${seller._id}`);
+                setTotalUnread(response.data.totalUnread);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        if (seller) {
+            fetchTotalUnreadMessages();
+        }
+    }, [seller]);
+    
     return (
         <div className="w-full h-[100vh] bg-white shadow-sm overflow-y-scroll sticky top-0 left-0 z-10">
 
@@ -63,9 +85,18 @@ const DashboardSideBar = ({ active }) => {
             </div>
 
             <div className="w-full flex items-center p-4">
-                <Link to="/dashboard-messages" className="w-full flex items-center">
-                    <BiMessageSquareDetail size={30} color={`${active === 8 ? "blue" : "#555"}`}/>
-                    <h5 className={`hidden 800px:block pl-2 text-[18px] font-[400] ${ active === 8 ? "text-[blue] font-semibold" : "text-[#555]" }`}> Shop Inbox</h5>
+                <Link to="/dashboard-messages" className="w-full flex items-center justify-between">
+                    <div className="flex">
+                        <BiMessageSquareDetail size={30} color={`${active === 8 ? "blue" : "#555"}`}/>
+                        <h5 className={`hidden 800px:block pl-2 text-[18px] font-[400] ${ active === 8 ? "text-[blue] font-semibold" : "text-[#555]" }`}> Shop Inbox</h5>
+                    </div>
+                    <div>
+                        {totalUnread > 0 && (
+                            <span className="bg-red-500 text-white text-sm px-2.5 py-1 rounded-full font-semibold">
+                                {totalUnread}
+                            </span>
+                        )}
+                    </div>
                 </Link>
             </div>
 

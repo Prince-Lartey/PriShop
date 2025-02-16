@@ -3,6 +3,7 @@ import express from "express"
 import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
 import ErrorHandler from "../utils/ErrorHandler.js";
 import upload from "../multer.js";
+import Conversation from "../model/conversation.js"
 
 const router = express.Router()
 
@@ -73,6 +74,36 @@ router.put("/mark-messages-as-seen/:conversationId", catchAsyncErrors(async (req
         });
     } catch (error) {
         return next(new ErrorHandler(error.message), 500);
+    }
+}));
+
+// Get total unread messages for a user
+router.get("/get-total-unread-messages/:userId", catchAsyncErrors(async (req, res, next) => {
+    try {
+        const { userId } = req.params;
+
+        // Fetch all conversations for the user
+        const conversations = await Conversation.find({ members: { $in: [userId] } });
+
+        let totalUnread = 0;
+
+        // Loop through each conversation and count unread messages
+        for (const conversation of conversations) {
+            const unreadMessages = await Messages.find({
+                conversationId: conversation._id,
+                seen: false,
+                sender: { $ne: userId },
+            });
+
+            totalUnread += unreadMessages.length;
+        }
+
+        res.status(200).json({
+            success: true,
+            totalUnread,
+        });
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
     }
 }));
 

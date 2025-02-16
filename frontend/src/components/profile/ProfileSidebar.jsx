@@ -8,9 +8,28 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { server } from "../../server";
+import { useSelector } from "react-redux"
+import { useEffect, useState } from "react"
 
 const ProfileSidebar = ({ setActive, active }) => {
+    const { user } = useSelector((state) => state.user);
+    const [totalUnread, setTotalUnread] = useState(0);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchTotalUnreadMessages = async () => {
+            try {
+                const response = await axios.get(`${server}/message/get-total-unread-messages/${user._id}`);
+                setTotalUnread(response.data.totalUnread);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        if (user) {
+            fetchTotalUnreadMessages();
+        }
+    }, [user]);
 
     const logoutHandler = () => {
         axios.get(`${server}/user/logout`, { withCredentials: true })
@@ -41,9 +60,17 @@ const ProfileSidebar = ({ setActive, active }) => {
                 <span className={`pl-3 ${ active === 3 ? "text-[blue] font-semibold" : "" } 800px:block hidden`}> Refunds</span>
             </div>
 
-            <div className="flex items-center cursor-pointer w-full mb-8" onClick={() => setActive(4) || navigate("/inbox")}>
-                <AiOutlineMessage size={20} color={active === 4 ? "blue" : ""} />
-                <span className={`pl-3 ${ active === 4 ? "text-[blue] font-semibold" : "" } 800px:block hidden`}> Inbox</span>
+            <div className="flex items-center cursor-pointer w-full mb-8 justify-between" onClick={() => setActive(4) || navigate("/inbox")}>
+                <div className="flex">
+                    <AiOutlineMessage size={20} color={active === 4 ? "blue" : ""} />
+                    <span className={`pl-3 ${ active === 4 ? "text-[blue] font-semibold" : "" } 800px:block hidden`}> Inbox</span>
+                </div>
+
+                {totalUnread > 0 && (
+                    <span className="bg-red-500 text-white text-sm px-2.5 py-1 rounded-full font-semibold">
+                        {totalUnread}
+                    </span>
+                )}
             </div>
 
             <div className="flex items-center cursor-pointer w-full mb-8" onClick={() => setActive(5)}>
