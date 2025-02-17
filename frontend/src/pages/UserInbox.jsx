@@ -11,7 +11,7 @@ import { TfiGallery } from "react-icons/tfi";
 import styles from "../styles/styles";
 import { toast } from "react-toastify";
 
-const ENDPOINT = "http://localhost:4000/";
+const ENDPOINT = "https://socket-prishop.onrender.com";
 const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
 
 const UserInbox = () => {

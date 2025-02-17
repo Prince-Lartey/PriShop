@@ -9,7 +9,7 @@ import { format } from "timeago.js"
 import styles from "../../styles/styles";
 
 import socketIO from "socket.io-client"
-const ENDPOINT = "http://localhost:4000/";
+const ENDPOINT = "https://socket-prishop.onrender.com";
 const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
 
 const DashboardMessages = () => {
