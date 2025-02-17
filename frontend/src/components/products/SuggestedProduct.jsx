@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { productData } from "../../static/data";
 import styles from "../../styles/styles";
-import ProductCard from "../route/ProductCard/ProductCard";
+import ProductCard from "../route/productCard/ProductCard";
 import { useSelector } from "react-redux";
 
 const SuggestedProduct = ({data}) => {

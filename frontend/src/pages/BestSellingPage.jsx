@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
-import ProductCard from "../components/route/ProductCard/ProductCard";
+import ProductCard from "../components/route/productCard/ProductCard";
 import styles from "../styles/styles";
 import { useSelector } from "react-redux";
 import Loader from "../components/layout/Loader";

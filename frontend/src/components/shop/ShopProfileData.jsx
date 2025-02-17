@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import styles from "../../styles/styles"
-import ProductCard from "../route/ProductCard/ProductCard"
+import ProductCard from "../route/productCard/ProductCard"
 import { useDispatch, useSelector } from "react-redux"
 import { getAllProductsShop } from "../../redux/actions/product"
 import { getAllEventsShop } from "../../redux/actions/event"
