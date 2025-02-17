@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "../../../styles/styles.js";
 import { AiFillHeart, AiOutlineEye, AiOutlineHeart, AiOutlineShoppingCart, } from "react-icons/ai";
-import ProductDetailsCard from "../ProductDetailsCard/ProductDetailsCard"
+import ProductDetailsCard from "../ProductDetailsCard/ProductDetailsCard.jsx"
 import { useDispatch, useSelector } from "react-redux";
 import { addTocart } from "../../../redux/actions/cart.js";
 import { toast } from "react-toastify";

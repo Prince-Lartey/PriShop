@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom"
 import Footer from "../components/layout/Footer"
 import Header from "../components/layout/Header"
-import ProductCard from "../components/route/ProductCard/ProductCard"
+import ProductCard from "../components/route/productCard/ProductCard"
 import styles from "../styles/styles"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
