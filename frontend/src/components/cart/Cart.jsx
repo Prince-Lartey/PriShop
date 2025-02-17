@@ -6,7 +6,6 @@ import { HiOutlineMinus, HiPlus } from "react-icons/hi"
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { backend_url } from "../../server";
 import { addTocart, removeFromCart } from "../../redux/actions/cart";
 
 const Cart = ({ setOpenCart }) => {

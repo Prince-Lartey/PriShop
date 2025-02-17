@@ -10,7 +10,6 @@ import { CgProfile } from "react-icons/cg";
 import DropDown from "./DropDown.jsx"
 import Navbar from "./Navbar.jsx"
 import { useSelector } from "react-redux";
-import { backend_url } from "../../server.js";
 import Cart from "../cart/Cart";
 import Wishlist from "../wishlist/Wishlist"
 import { RxCross1 } from "react-icons/rx";
@@ -88,7 +87,7 @@ const Header = ({ activeHeading }) => {
                                     return (
                                         <Link key={index} to={`/product/${i._id}`}>
                                             <div className="w-full flex items-start py-3">
-                                                <img src={`${backend_url}${i.images[0]}`} alt="" className="w-[40px] h-[40px] mr-[10px]"/>
+                                                <img src={`${i.images[0].url}`} alt="" className="w-[40px] h-[40px] mr-[10px]"/>
                                                 <h1>{i.name}</h1>
                                             </div>
                                         </Link>
@@ -270,7 +269,7 @@ const Header = ({ activeHeading }) => {
                                 {isAuthenticated ? (
                                     <div>
                                         <Link to="/profile">
-                                            <img src={`${backend_url}${user.avatar.url}`} alt="" className="w-[60px] h-[60px] rounded-full border-[3px] border-[#0eae88]"/>
+                                            <img src={`${user.avatar.url}`} alt="" className="w-[60px] h-[60px] rounded-full border-[3px] border-[#0eae88]"/>
                                         </Link>
                                     </div>
                                     ) : (

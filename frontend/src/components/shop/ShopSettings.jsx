@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { AiOutlineCamera } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
-import { backend_url, server } from '../../server';
+import { server } from '../../server';
 import styles from '../../styles/styles';
 import axios from 'axios';
 import { toast } from 'react-toastify';

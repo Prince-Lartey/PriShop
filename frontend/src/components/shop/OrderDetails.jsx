@@ -4,7 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import styles from "../../styles/styles";
 import { BsFillBagFill } from "react-icons/bs";
 import { getAllOrdersOfShop } from "../../redux/actions/order";
-import { backend_url, server } from "../../server";
+import {  server } from "../../server";
 import axios from "axios";
 import { toast } from "react-toastify";
 

@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom"
-import { backend_url } from "../../server.js"
 import styles from "../../styles/styles"
 import CountDown from "./CountDown.jsx"
 import { useDispatch, useSelector } from "react-redux"

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import { backend_url, server } from "../../server"
+import {  server } from "../../server"
 import { Link, useParams } from "react-router-dom"
 import styles from "../../styles/styles"
 import axios from "axios"
