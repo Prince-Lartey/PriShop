@@ -89,8 +89,8 @@ const DashboardHero = () => {
                     <div className="flex items-center">
                         <AiOutlineMoneyCollect size={30} className="mr-2" fill="#00000085"/>
                         <h3 className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}>
-                            Account Balance{" "}
-                            <span className="text-[16px]">(with 10% service charge)</span>
+                            Acc Balance{" "}
+                            <span className="text-[16px]">(minus 3% of admin service charge)</span>
                         </h3>
                     </div>
                     <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">GH₵ {availableBalance}</h5>

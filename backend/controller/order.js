@@ -89,7 +89,7 @@ router.put("/update-order-status/:id", isSeller, catchAsyncErrors(async (req, re
         if (!order) {
             return next(new ErrorHandler("Order not found with this id", 400));
         }
-        if (req.body.status === "Transferred to delivery partner") {
+        if (req.body.status === "Delivered") {
             order.cart.forEach(async (o) => {
                 await updateOrder(o._id, o.qty);
             });
@@ -100,7 +100,7 @@ router.put("/update-order-status/:id", isSeller, catchAsyncErrors(async (req, re
         if (req.body.status === "Delivered") {
             order.deliveredAt = Date.now();
             order.paymentInfo.status = "Succeeded";
-            const serviceCharge = order.totalPrice * .10;
+            const serviceCharge = order.totalPrice * .03;
             await updateSellerInfo(order.totalPrice - serviceCharge);
         }
 
