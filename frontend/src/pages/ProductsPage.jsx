@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom"
-import Footer from "../components/Layout/Footer"
+import Footer from "../components/layout/Footer"
 import Header from "../components/layout/Header"
 import ProductCard from "../components/route/ProductCard/ProductCard"
 import styles from "../styles/styles"
