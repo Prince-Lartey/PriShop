@@ -4,6 +4,7 @@ import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
 import ErrorHandler from "../utils/ErrorHandler.js";
 import upload from "../multer.js";
 import Conversation from "../model/conversation.js"
+import { v2 as cloudinary } from 'cloudinary'
 
 const router = express.Router()
 
@@ -12,11 +13,14 @@ router.post("/create-new-message", upload.array("images"), catchAsyncErrors(asyn
     try {
         const messageData = req.body;
 
-        if (req.files) {
-            const files = req.files
-            const imageUrls = files.map((file) => `${file.filename}`)
-
-            messageData.images = imageUrls
+        if (req.body.images) {
+            const myCloud = await cloudinary.uploader.upload(req.body.images, {
+                folder: "messages",
+            });
+            messageData.images = {
+                public_id: myCloud.public_id,
+                url: myCloud.url,
+            };
         }
 
         messageData.conversationId = req.body.conversationId;

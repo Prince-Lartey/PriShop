@@ -286,7 +286,7 @@ const MessageList = ({ data, index, setOpen, setCurrentChat, me, setUserData, us
                     {online ? (
                         <div className="w-[12px] h-[12px] bg-green-400 rounded-full absolute top-[2px] right-[2px]" />
                     ) : (
-                        <div className="w-[12px] h-[12px] bg-[#c7b9b9] rounded-full absolute top-[2px] right-[2px]" />
+                        <div className="w-[12px] h-[12px] bg-[#f35656] rounded-full absolute top-[2px] right-[2px]" />
                     )}
                 </div>
 
@@ -335,7 +335,7 @@ const SellerInbox = ({ setOpen, newMessage, setNewMessage, sendMessageHandler, m
                             <img src={`${userData?.avatar?.url}`} className="w-[40px] h-[40px] rounded-full mr-3" alt="" />
                         )}
                         {item.images && (
-                            <img src={item.images.startsWith("data:image") ? item.images : `${item?.images}`} alt="" className="w-[300px] h-[300px] object-cover rounded-[10px] ml-2 mb-2" />
+                            <img src={`${item?.images?.url}`} alt="" className="w-[300px] h-[300px] object-cover rounded-[10px] ml-2 mb-2" />
                         )}
                         {item.text !== "" && (
                             <div>

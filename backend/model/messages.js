@@ -12,7 +12,12 @@ const messagesSchema = new mongoose.Schema(
             type: String,
         },
         images: {
-            type: String,
+            public_id: {
+                type: String,
+            },
+            url: {
+                type: String,
+            },
         },
         seen: {
             type: Boolean,

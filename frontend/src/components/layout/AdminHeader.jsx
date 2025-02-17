@@ -1,7 +1,6 @@
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import PriShopLogo from "../../assets/logo/PriShopLogo.png"
-import { backend_url } from '../../server'
 
 const AdminHeader = () => {
     const {user} = useSelector((state) => state.user);
@@ -15,7 +14,7 @@ const AdminHeader = () => {
             </div>
             <div className="flex items-center">
                 <div className="flex items-center mr-4">
-                    <img src={`${backend_url}${user.avatar.url}`} alt="" className="w-[50px] h-[50px] rounded-full object-cover" />
+                    <img src={`${user.avatar.url}`} alt="" className="w-[50px] h-[50px] rounded-full object-cover" />
                 </div>
             </div>
         </div>
