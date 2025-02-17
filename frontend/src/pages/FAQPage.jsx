@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Footer from "../components/Layout/Footer"
+import Footer from "../components/layout/Footer"
 import Header from "../components/layout/Header"
 import styles from "../styles/styles";
 
