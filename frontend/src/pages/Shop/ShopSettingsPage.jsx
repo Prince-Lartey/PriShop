@@ -1,4 +1,4 @@
-import ShopSettings from "../../components/shop/ShopSettings.jsx";
+import ShopSettings from "../../components/shop/ShopSettings";
 import DashboardHeader from "../../components/shop/Layout/DashboardHeader";
 import DashboardSideBar from "../../components/shop/Layout/DashboardSideBar";
 
