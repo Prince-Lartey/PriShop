@@ -30,9 +30,6 @@ const Checkout = () => {
         0
     );
 
-    // this is shipping cost variable
-    const shipping = Math.round(subTotalPrice * 0.1 * 10) / 10;
-
     const paymentSubmit = () => {
         if(address1 === "" || address2 === "" || zipCode === null || country === "" || city === ""){
             toast.error("Please fill your delivery address!")
@@ -49,7 +46,6 @@ const Checkout = () => {
                 cart,
                 totalPrice,
                 subTotalPrice,
-                shipping,
                 discountPrice,
                 shippingAddress,
                 user,
@@ -97,7 +93,7 @@ const Checkout = () => {
 
     const discountPercentage = couponCodeData ? discountPrice : "";
 
-    const totalPrice = couponCodeData ? (subTotalPrice + shipping - discountPercentage).toFixed(2) : (subTotalPrice + shipping).toFixed(2);
+    const totalPrice = couponCodeData ? (subTotalPrice - discountPercentage).toFixed(2) : (subTotalPrice).toFixed(2);
 
     return (
         <div  className="w-full flex flex-col items-center py-8">
@@ -106,7 +102,7 @@ const Checkout = () => {
                     <ShippingInfo user={user} country={country} setCountry={setCountry} city={city} setCity={setCity} userInfo={userInfo} setUserInfo={setUserInfo} address1={address1} setAddress1={setAddress1} address2={address2} setAddress2={setAddress2} zipCode={zipCode} setZipCode={setZipCode}/>
                 </div>
                 <div className="w-full 800px:w-[35%] 800px:mt-0 mt-8">
-                    <CartData handleSubmit={handleSubmit} totalPrice={totalPrice} shipping={shipping} subTotalPrice={subTotalPrice} couponCode={couponCode} setCouponCode={setCouponCode} discountPercentage={discountPercentage}/>
+                    <CartData handleSubmit={handleSubmit} totalPrice={totalPrice} subTotalPrice={subTotalPrice} couponCode={couponCode} setCouponCode={setCouponCode} discountPercentage={discountPercentage}/>
                 </div>
             </div>
 
@@ -205,7 +201,7 @@ const ShippingInfo = ({ user, country, setCountry, city, setCity, zipCode, setZi
     )
 }
 
-const CartData = ({ handleSubmit, totalPrice, shipping, subTotalPrice, couponCode, setCouponCode, discountPercentage,}) =>  {
+const CartData = ({ handleSubmit, totalPrice, subTotalPrice, couponCode, setCouponCode, discountPercentage,}) =>  {
 
     return (
         <div className="w-full bg-[#fff] rounded-md p-5 pb-8">
@@ -214,10 +210,7 @@ const CartData = ({ handleSubmit, totalPrice, shipping, subTotalPrice, couponCod
                 <h5 className="text-[18px] font-[600]">GH₵ {subTotalPrice}</h5>
             </div>
             <br />
-            <div className="flex justify-between">
-                <h3 className="text-[16px] font-[400] text-[#000000a4]">Shipping:</h3>
-                <h5 className="text-[18px] font-[600]">GH₵ {shipping}</h5>
-            </div>
+            
             <br />
             <div className="flex justify-between border-b pb-3">
                 <h3 className="text-[16px] font-[400] text-[#000000a4]">Discount:</h3>
