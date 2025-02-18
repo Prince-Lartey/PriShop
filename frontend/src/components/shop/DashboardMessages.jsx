@@ -331,7 +331,7 @@ const SellerInbox = ({ setOpen, scrollRef, newMessage, setNewMessage, sendMessag
                                 <img src={`${item?.images?.url}`} alt="" className="w-[300px] h-[300px] object-cover rounded-[10px] mr-2"/>
                             )}
                             <div>
-                                <div className={`w-max p-2 rounded ${ item.sender === sellerId ? "bg-[#000]" : "bg-[#38c776]" } text-[#fff] h-min`}>
+                                <div className={`w-max p-2 rounded ${ item.sender === sellerId ? "bg-[#000]" : "bg-[#38c776]" } text-[#fff] h-min max-w-[300px] `}>
                                 {item.text.match(/.{1,60}/g)?.map((chunk, index) => (
                                     <p key={index}>{chunk}</p>
                                 ))}
