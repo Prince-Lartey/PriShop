@@ -287,10 +287,8 @@ const MessageList = ({ data, index, setOpen, setCurrentChat, me, setUserData, on
                 <div className="pl-3">
                     <h1 className="text-[18px]">{user?.name}</h1>
                     <p className="text-[16px] text-[#000c]">
-                        {!isLoading && data?.lastMessageId !== user?._id
-                            ? "You:"
-                            : user?.name.split(" ")[0] + ": "}{" "}
-                        {data?.lastMessage}
+                        {!isLoading && data?.lastMessageId !== user?._id ? "You:" : user?.name.split(" ")[0] + ": "}{" "}
+                        {data?.lastMessage.length > 30 ? data?.lastMessage.slice(0, 30) + "..." : data?.lastMessage}
                     </p>
                 </div>
             </div>
