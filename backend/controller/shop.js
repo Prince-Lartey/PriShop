@@ -38,7 +38,10 @@ router.post("/create-shop", upload.single("avatar"), async (req, res, next) => {
             email: email,
             password: req.body.password,
             avatar: {
-                public_id: myCloud.public_id,
+        
+        const activationUrl = `https://prishop-brown.vercel.app//seller/activation/${activationToken}`;
+
+        try        public_id: myCloud.public_id,
                 url: myCloud.secure_url,
             },
             address: req.body.address,
@@ -48,10 +51,7 @@ router.post("/create-shop", upload.single("avatar"), async (req, res, next) => {
         };
 
         const activationToken = createActivationToken(seller);
-
-        const activationUrl = `https://prishop-brown.vercel.app//seller/activation/${activationToken}`;
-
-        try {
+ {
             await sendMail({
                 email: seller.email,
                 subject: "Activate your online Shop",
