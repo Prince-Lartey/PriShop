@@ -335,19 +335,28 @@ const SellerInbox = ({ setOpen, newMessage, setNewMessage, sendMessageHandler, m
                         {item.images && (
                             <img src={`${item?.images?.url}`} alt="" className="w-[300px] h-[300px] object-cover rounded-[10px] ml-2 mb-2" />
                         )}
-                        {item.text !== "" && (
-                            <div>
-                                <div className={`w-max p-2 rounded ${ item.sender === sellerId ? "bg-[#000]" : "bg-[#38c776]" } text-[#fff] h-min`}>
-                                    {item.text.match(/.{1,40}/g)?.map((chunk, index) => (
-                                        <p key={index}>{chunk}</p>
+                        {
+                            item.text !== "" && (
+                                <div>
+                                    {/* Split text into chunks of 40 characters */}
+                                    {item.text.match(/.{1,40}/g).map((chunk, index) => (
+                                        <div
+                                            key={index}
+                                            className={`w-max p-2 rounded ${
+                                                item.sender === sellerId ? "bg-[#000]" : "bg-[#38c776]"
+                                            } text-[#fff] h-min`}
+                                        >
+                                            <p>{chunk}</p>
+                                        </div>
                                     ))}
-                                </div>
 
-                                <p className="text-[12px] text-[#000000d3] pt-1">
-                                    {format(item.createdAt)}
-                                </p>
-                            </div>
-                        )}
+                                    {/* Display timestamp */}
+                                    <p className="text-[12px] text-[#000000d3] pt-1">
+                                        {format(item.createdAt)}
+                                    </p>
+                                </div>
+                            )
+                        }
                     </div>
                 ))}
             </div>
