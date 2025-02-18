@@ -337,10 +337,10 @@ const SellerInbox = ({ setOpen, newMessage, setNewMessage, sendMessageHandler, m
                         )}
                         {item.text !== "" && (
                             <div>
-                                <div className={`w-max p-2 rounded ${ item.sender === sellerId ? "bg-[#000]" : "bg-[#38c776]" } text-[#fff] h-min max-w-[250px] break-words`}>
-                                    {item.text.match(/.{1,40}/g)?.map((chunk, index) => (
-                                        <p key={index}>{chunk}</p>
-                                    ))}
+                                <div className={`w-max p-2 rounded ${ item.sender === sellerId ? "bg-[#000]" : "bg-[#38c776]" } text-[#fff] h-min`}>
+                                {item.text.match(/.{1,60}/g)?.map((chunk, index) => (
+                                    <p key={index}>{chunk}</p>
+                                ))}
                                 </div>
 
                                 <p className="text-[12px] text-[#000000d3] pt-1">

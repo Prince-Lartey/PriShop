@@ -321,7 +321,7 @@ const SellerInbox = ({ setOpen, scrollRef, newMessage, setNewMessage, sendMessag
 
             {/* messages */}
             <div className="px-3 h-[65vh] py-3 overflow-y-scroll">
-                {messages && messages.map((item, index) => {
+                {messages?.map((item, index) => {
                     return (
                         <div className={`flex w-full my-2 ${ item.sender === sellerId ? "justify-end" : "justify-start"}`} ref={scrollRef} key={index}>
                             {item.sender !== sellerId && (
@@ -330,15 +330,17 @@ const SellerInbox = ({ setOpen, scrollRef, newMessage, setNewMessage, sendMessag
                             {item.images && (
                                 <img src={`${item?.images?.url}`} alt="" className="w-[300px] h-[300px] object-cover rounded-[10px] mr-2"/>
                             )}
-                            {item.text !== "" &&  (
-                                <div>
-                                    <div className={`w-max p-2 rounded ${ item.sender === sellerId ? "bg-[#000]" : "bg-[#38c776]"} text-[#fff] h-min`}>
-                                        <p>{item.text}</p>
-                                    </div>
-
-                                    <p className="text-[12px] text-[#000000d3] pt-1">{format(item.createdAt)}</p>
+                            <div>
+                                <div className={`w-max p-2 rounded ${ item.sender === sellerId ? "bg-[#000]" : "bg-[#38c776]" } text-[#fff] h-min`}>
+                                {item.text.match(/.{1,60}/g)?.map((chunk, index) => (
+                                    <p key={index}>{chunk}</p>
+                                ))}
                                 </div>
-                            )}
+
+                                <p className="text-[12px] text-[#000000d3] pt-1">
+                                    {format(item.createdAt)}
+                                </p>
+                            </div>
                         </div>
                     );
                 })}
