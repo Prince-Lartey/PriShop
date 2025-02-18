@@ -121,7 +121,7 @@ router.post("/create-user", upload.single("avatar"), async (req, res, next) => {
             await sendMail({
                 email: user.email,
                 subject: "Activate your account",
-                message: emailTemplate,
+                html: emailTemplate,
                 isHtml: true,
             });
             res.status(201).json({
