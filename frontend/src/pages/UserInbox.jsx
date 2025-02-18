@@ -327,7 +327,7 @@ const SellerInbox = ({ setOpen, newMessage, setNewMessage, sendMessageHandler, m
 
             {/* messages */}
             <div className="px-3 h-[75vh] py-3 overflow-y-scroll">
-                {messages && messages.map((item, index) => (
+                {messages?.map((item, index) => (
                     <div key={index} className={`flex w-full my-2 ${ item.sender === sellerId ? "justify-end" : "justify-start"}`} ref={scrollRef}>
                         {item.sender !== sellerId && (
                             <img src={`${userData?.avatar?.url}`} className="w-[40px] h-[40px] rounded-full mr-3" alt="" />
@@ -338,7 +338,9 @@ const SellerInbox = ({ setOpen, newMessage, setNewMessage, sendMessageHandler, m
                         {item.text !== "" && (
                             <div>
                                 <div className={`w-max p-2 rounded ${ item.sender === sellerId ? "bg-[#000]" : "bg-[#38c776]" } text-[#fff] h-min`}>
-                                    <p>{item.text}</p>
+                                    {item.text.match(/.{1,40}/g)?.map((chunk, index) => (
+                                        <p key={index}>{chunk}</p>
+                                    ))}
                                 </div>
 
                                 <p className="text-[12px] text-[#000000d3] pt-1">
